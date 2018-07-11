@@ -1,5 +1,4 @@
 # README
----
 This repository include the config setting of Unix like system for myself  
 
 ## Pre-install
@@ -12,4 +11,4 @@ git clone https://github.com/os369510/WorkEnvSetup.git
 
 ## Usage
 cd ~/Workspace/WorkEnvSetup  
-bash container_start.sh  
+bash env_set.sh (docker|dotfiles)  

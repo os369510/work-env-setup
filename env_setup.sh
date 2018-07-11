@@ -71,22 +71,34 @@ DOTFILES="git-completion.sh git-prompt.sh bashrc bash_profile"
 WORK_DIR="Workspace"
 
 VOL_NAME="docker-work-area"
-VOL="$HOME/$WORK_DIR/$VOL_NAME"
 REPO="$HOME/$WORK_DIR/WorkEnvSetup"
 
 DOCKER_BASE_NAME="work-on-arch"
 DOCKER_IMG="os369510/work-on-arch"
 
-check_docker_installed res
-[ "$res" -ne 0 ] && exit -1
+case $1 in
+    docker)
+        VOL="$HOME/$WORK_DIR/$VOL_NAME"
 
-check_arch_image_exist res
-[ "$res" -ne 0 ] && exit -1
+        check_docker_installed res
+        [ "$res" -ne 0 ] && exit -1
 
-get_same_container_num order
-order=$(($order+1))
-DOCKER_NAME="$DOCKER_BASE_NAME-$order"
+        check_arch_image_exist res
+        [ "$res" -ne 0 ] && exit -1
 
-setup_dotfiles
+        get_same_container_num order
+        order=$(($order+1))
+        DOCKER_NAME="$DOCKER_BASE_NAME-$order"
 
-docker run -it --rm -w /root -v $VOL:/root --name $DOCKER_NAME $DOCKER_IMG
+        setup_dotfiles
+
+        docker run -it --rm -w /root -v $VOL:/root --name $DOCKER_NAME $DOCKER_IMG
+        ;;
+    dotfiles)
+        VOL="$HOME"
+        setup_dotfiles
+        ;;
+    *)
+        echo "Usage: $0 (docker|dotfiles)"
+        exit 1
+esac

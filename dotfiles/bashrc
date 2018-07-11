@@ -1,12 +1,26 @@
 set +h
 
-. ~/.git-completion.sh
-. ~/.git-prompt.sh
+PS1='\u@$PNAME [\[\e[1;31m\]'
 
-PS1='\u@$PNAME [\[\e[1;31m\]$(__git_ps1 " %s")\[\e[0m\] \[\e[32m\]$PWD\[\e[0m\] ]\n$ '
+if [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+fi
+
+if [ -f ~/.git-completion.sh ]; then
+        . ~/.git-completion.sh
+fi
+
+if [ -f ~/.git-prompt.sh ]; then
+        . ~/.git-prompt.sh
+        PS1=$PS1'$(__git_ps1 " %s")'
+        GIT_PS1_SHOWUPSTREAM="auto"
+fi
+
+PS1=$PS1'\[\e[0m\] \[\e[93m\]$PWD\[\e[0m\] ]\n$ '
 
 alias ll='ls -alh --color=auto --time-style="+[%Y/%m/%d %H:%M:%S]"'
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
+alias conv-csv='enca -L zh_TW -x utf-8'
 
-GIT_PS1_SHOWUPSTREAM="auto"
+export EDITOR=vim
