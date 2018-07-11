@@ -12,3 +12,6 @@ git clone https://github.com/os369510/WorkEnvSetup.git
 ## Usage
 cd ~/Workspace/WorkEnvSetup  
 bash env_set.sh (docker|dotfiles)  
+
+## Other Packages
+[vim-go](https://github.com/fatih/vim-go)  
