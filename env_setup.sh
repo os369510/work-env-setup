@@ -1,5 +1,11 @@
 #!/bin/bash
-
+function usage()
+{
+    echo "Usage: $0 (docker|dotfiles)[docker-image]"
+    echo "  $0 dotfiles"
+    echo "  $0 docker [docker-image]"
+    exit 1
+}
 function check_docker_installed()
 {
     local ret=$1
@@ -19,7 +25,7 @@ function check_docker_installed()
 
     eval $ret="'$installed'"
 }
-function check_arch_image_exist()
+function check_docker_image_exist()
 {
     local ret=$1
     local id=""
@@ -28,10 +34,10 @@ function check_arch_image_exist()
     echo "# Step.$STEPS Check docker image of arch whether existed?"
     echo "-- Required docker image: $DOCKER_IMG"
 
-    id=`docker images -q $DOCKER_IMG`
-    existed=`echo $?`
-    if [ "$existed" -eq '0' ]; then
+    id=`docker images -q $DOCKER_IMG| head -n 1`
+    if [ "$id" != "" ]; then
         echo "--- Image ID - $id"
+        existed=0
     else
         echo "-- not found $DOCKER_IMG"
     fi
@@ -46,7 +52,7 @@ function get_same_container_num()
 
     echo "# Step.$STEPS Get the number of same container."
 
-    count=`docker ps -a| grep $DOCKER_BASE_NAME| wc -l`
+    count=`docker ps -a| grep $2| wc -l`
     STEPS=$(($STEPS+1))
 
     eval $ret="'$count'"
@@ -74,22 +80,30 @@ WORK_DIR="Workspace"
 VOL_NAME="docker-work-area"
 REPO="$HOME/$WORK_DIR/WorkEnvSetup"
 
-DOCKER_BASE_NAME="work-on-arch"
-DOCKER_IMG="os369510/work-on-arch"
-
 case $1 in
     docker)
+        if [ "$2" == "" ]; then
+            usage
+            exit -1
+        fi
+        DOCKER_BASE_NAME=${2#*/}
+        DOCKER_IMG=$2
         VOL="$HOME/$WORK_DIR/$VOL_NAME"
+        order=0
+
+        if [ ! -d $VOL ]; then
+            mkdir $VOL
+        fi
 
         check_docker_installed res
         [ "$res" -ne 0 ] && exit -1
 
-        check_arch_image_exist res
+        check_docker_image_exist res
         [ "$res" -ne 0 ] && exit -1
 
-        get_same_container_num order
+        get_same_container_num order $DOCKER_BASE_NAME
         order=$(($order+1))
-        DOCKER_NAME="$DOCKER_BASE_NAME-$order"
+        DOCKER_NAME="${DOCKER_IMG//\//-}-$order"
 
         setup_dotfiles
 
@@ -100,6 +114,5 @@ case $1 in
         setup_dotfiles
         ;;
     *)
-        echo "Usage: $0 (docker|dotfiles)"
-        exit 1
+        usage
 esac
