@@ -65,7 +65,7 @@ function setup_dotfiles()
         cp $REPO/$DOTDIR/$dotfile $VOL/.$dotfile
     done
 
-    cp -R $REPO/$DOTDIR/vim/* $VOL/.vim/
+    mkdir -p $VOL/.vim && cp -R $REPO/$DOTDIR/vim/* $VOL/.vim/
     cp $REPO/$DOTDIR/vim/vimrc $VOL/.vimrc
 
     STEPS=$(($STEPS+1))
