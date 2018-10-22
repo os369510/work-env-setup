@@ -1,6 +1,9 @@
 # README
 This repository include the config setting of Unix like system for myself  
 
+## Requirement
+curl
+
 ## Pre-install
 mkdir -p ~/Workspace/WorkEnvSetup  
 mkdir -p ~/Workspace/docker-work-area  
