@@ -77,7 +77,7 @@ colorscheme molokai
 
 set bs=2
 set ai
-set tw=100
+set tw=80
 set modifiable
 set winminheight=0
 
