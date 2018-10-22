@@ -1,6 +1,6 @@
 set +h
 
-PS1='\u@$PNAME [\[\e[1;31m\]'
+PS1='\u@\h$PNAME [\[\e[1;31m\]'
 
 if [ -f /etc/bash_completion ]; then
         . /etc/bash_completion
