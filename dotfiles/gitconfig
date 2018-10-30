@@ -1,0 +1,7 @@
+[user]
+	name = Jeremy Su
+	email = os369510@gmail.com
+[url "git+ssh://os369510@git.launchpad.net/"]                                                                                           
+    insteadof = lp:
+[alias]
+    tree = log --graph --decorate --pretty=oneline --abbrev-commit

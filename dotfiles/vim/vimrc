@@ -65,7 +65,7 @@ set shiftwidth=4
 " Display
 set showmatch
 set wildmenu
-set wrap
+set nowrap
 set nonu
 set tabpagemax=50
 set t_Co=256
