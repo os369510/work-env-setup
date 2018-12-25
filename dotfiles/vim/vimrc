@@ -192,30 +192,6 @@ nmap <SPACE> :nohlsearch<cr>
 """ ================Tagbar toggle==================
 ""nmap <F6> :TagbarToggle<CR>
 ""
-""" ================== cscope setting =====================
-""" Press F12 to generate/update tags file after modify source code
-""" You must situiate in project root folder to execute it
-""" (jump back & foward in the source code need this)
-""" You have to 'sudo apt-get install ctags  (exuberant-ctags)' first
-""" nmap <F12> :!ctags-exuberant -R --sort=yes --c++-kinds=+p --fields=iaS --extra=+q .<CR>
-""
-""" Press F11 to generate/update cscope file after modifying source code
-""" You must situiate in project root folder to execute it
-""" (all the cscope action need this)
-""" You have to 'sudo apt-get install cscope' first
-""nmap <F11> :!find . -iname '*.[ch]' > cscope.files ; cscope -b -q<CR>:cs kill -1<CR>:cs add cscope.out<CR>
-""
-""" display all calls function
-""nmap <F4> :cs find c <C-R>=expand("<cword>")<CR><CR>
-""nnoremap <F5> 9[{?(<cr>b:nohls<cr>:cs find c <C-R>=expand("<cword>")<CR><CR>
-""
-""" jump to the header file
-""nmap <F7> :cs find f <C-R>=expand("<cfile>")<CR><CR>
-""
-""" display all called function
-""" nmap <F3> :cs find d <C-R>=expand("<cword>")<CR><CR>
-""
-""map <F2> :execute "grep! -rsIw --color=auto --include=*.{c,h} . -e " . expand("<cword>") . " " <bar> call QFixToggle(1)<CR><CR>
 
 " Automate install vim plug
 if empty(glob('~/.vim/autoload/plug.vim'))
