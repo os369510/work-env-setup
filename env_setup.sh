@@ -74,7 +74,7 @@ function setup_dotfiles()
 STEPS=1
 
 DOTDIR="dotfiles"
-DOTFILES="git-completion.sh git-prompt.sh bashrc bash_profile"
+DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc bash_profile"
 WORK_DIR="Workspace"
 
 VOL_NAME="docker-work-area"
