@@ -3,17 +3,21 @@ set +h
 PS1='\u@\h$PNAME [\[\e[1;31m\]'
 
 if [ -f /etc/bash_completion ]; then
-        . /etc/bash_completion
+    . /etc/bash_completion
 fi
 
 if [ -f ~/.git-completion.sh ]; then
-        . ~/.git-completion.sh
+    . ~/.git-completion.sh
 fi
 
 if [ -f ~/.git-prompt.sh ]; then
-        . ~/.git-prompt.sh
-        PS1=$PS1'$(__git_ps1 " %s")'
-        GIT_PS1_SHOWUPSTREAM="auto"
+    . ~/.git-prompt.sh
+    PS1=$PS1'$(__git_ps1 " %s")'
+    GIT_PS1_SHOWUPSTREAM="auto"
+fi
+
+if [ -d "$HOME/.local/bin/my_scripts" ]; then
+    export PATH="$HOME/.local/bin/my_scripts:$PATH"
 fi
 
 PS1=$PS1'\[\e[0m\] \[\e[93m\]$PWD\[\e[0m\] ]\n$ '

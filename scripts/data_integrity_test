@@ -1,0 +1,53 @@
+[global]
+### may not change
+gtod_reduce=1
+ioengine=libaio
+group_reporting=1
+time_based=1
+#cpus_allowed=2
+
+### block size
+### for sequencial io, recommend 128k
+### for random io, recommend 4k
+bs=1M
+#bs=128k
+### there is 8k sequential read/write test of storage review
+#bs=8k
+#bs=4k
+
+### using file size or runtime 
+### for test cache hit performance
+### use file size less than memory
+size=100G
+### run test 3 minutes 
+runtime=20d
+
+### read, write ,random read and random write
+rw=readwrite
+#rw=read
+#rw=randwrite
+#rw=randread
+
+### number of jobs, default is 1. Recommend set to cup cores.
+### Storage review using 16 threads to test performance
+#numjobs=16
+#numjobs=4
+
+### iodepth, recommend that iodepth * numjobs = 128, 
+### but storage review using iodepth * numjobs = 256 for performance test
+iodepth=32
+
+### direct io, usually test physical bus performance.
+direct=1
+### buffer io, usually test system overall performance.
+#direct=0
+
+### job name, can be changed
+[test1]
+filename=/share/Public/test1.img
+[test2]
+filename=/share/Public/test2.img
+[test3]
+filename=/share/Public/test3.img
+[test4]
+filename=/share/Public/test4.img

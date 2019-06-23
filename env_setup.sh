@@ -61,12 +61,22 @@ function setup_dotfiles()
 {
     echo "# Step.$STEPS Setup dotfiles."
 
+    # dotfiles
     for dotfile in $DOTFILES; do
         cp $REPO/$DOTDIR/$dotfile $VOL/.$dotfile
     done
 
+    # vim
     mkdir -p $VOL/.vim && cp -R $REPO/$DOTDIR/vim/* $VOL/.vim/
     cp $REPO/$DOTDIR/vim/vimrc $VOL/.vimrc
+
+    # scripts
+    mkdir -p "$SCRIPTDIR"
+    if [ -d "$SCRIPTDIR" ]; then
+        for script in $(find "$REPO/$SCRIPTS" -name "*.sh"); do
+            cp "$script" "$SCRIPTDIR/$(basename $script)"
+        done
+    fi
 
     STEPS=$(($STEPS+1))
 }
@@ -74,6 +84,8 @@ function setup_dotfiles()
 STEPS=1
 
 DOTDIR="dotfiles"
+SCRIPTS="scripts"
+SCRIPTDIR="$HOME/.local/bin/my_scripts"
 DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc bash_profile"
 WORK_DIR="Workspace"
 
@@ -112,6 +124,7 @@ case $1 in
     dotfiles)
         VOL="$HOME"
         setup_dotfiles
+        source ~/.bashrc
         ;;
     *)
         usage

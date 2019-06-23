@@ -200,7 +200,8 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-" vim-go setting
+" VimPlug
 call plug#begin()
+" vim-go setting
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 call plug#end()
