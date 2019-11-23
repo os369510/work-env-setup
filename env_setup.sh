@@ -71,7 +71,7 @@ function setup_dotfiles()
 
     # vim
     mkdir -p $VOL/.vim && cp -R $REPO/$DOTDIR/vim/* $VOL/.vim/
-    cp $REPO/$DOTDIR/vim/vimrc $VOL/.vimrc
+    cp -u $REPO/$DOTDIR/vim/vimrc $VOL/.vimrc
 
     # scripts
     mkdir -p "$SCRIPTDIR"
