@@ -64,6 +64,7 @@ function setup_dotfiles()
     # dotfiles
     for dotfile in $DOTFILES; do
         if ! cmp --silent "$REPO/$DOTDIR/$dotfile" "$VOL/.$dotfile"; then
+            echo "Copy $REPO/$DOTDIR/$dotfile to $VOL/.$dotfile..."
             cp "$REPO/$DOTDIR/$dotfile" "$VOL/.$dotfile"
         fi
     done
@@ -77,6 +78,7 @@ function setup_dotfiles()
     if [ -d "$SCRIPTDIR" ]; then
         for script in $(find "$REPO/$SCRIPTS" -name "*.sh"); do
             if ! cmp --silent "$script" "$SCRIPTDIR/$(basename "$script")"; then
+                echo "Copy $script to $SCRIPTDIR/$(basename "$script")"
                 cp "$script" "$SCRIPTDIR/$(basename "$script")"
             fi
         done
