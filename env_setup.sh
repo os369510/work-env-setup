@@ -63,7 +63,9 @@ function setup_dotfiles()
 
     # dotfiles
     for dotfile in $DOTFILES; do
-        cp $REPO/$DOTDIR/$dotfile $VOL/.$dotfile
+        if ! cmp --silent "$REPO/$DOTDIR/$dotfile" "$VOL/.$dotfile"; then
+            cp "$REPO/$DOTDIR/$dotfile" "$VOL/.$dotfile"
+        fi
     done
 
     # vim
@@ -74,7 +76,9 @@ function setup_dotfiles()
     mkdir -p "$SCRIPTDIR"
     if [ -d "$SCRIPTDIR" ]; then
         for script in $(find "$REPO/$SCRIPTS" -name "*.sh"); do
-            cp "$script" "$SCRIPTDIR/$(basename $script)"
+            if ! cmp --silent "$script" "$SCRIPTDIR/$(basename "$script")"; then
+                cp "$script" "$SCRIPTDIR/$(basename "$script")"
+            fi
         done
     fi
 
