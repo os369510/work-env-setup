@@ -75,6 +75,10 @@ hi CursorLine cterm=none
 highlight LineNr cterm=NONE ctermfg=darkgrey ctermbg=NONE
 colorscheme molokai
 
+" Highligh whitespace at end of line
+highlight RedundantSpaces ctermbg=red guibg=red
+match RedundantSpaces /\s\+$/
+
 set bs=2
 set ai
 set tw=80
