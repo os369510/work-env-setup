@@ -92,7 +92,8 @@ STEPS=1
 DOTDIR="dotfiles"
 SCRIPTS="scripts"
 SCRIPTDIR="$HOME/.local/bin/my_scripts"
-DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc bash_profile"
+DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc bash_profile\
+Xresources"
 WORK_DIR="Workspace"
 
 VOL_NAME="docker-work-area"

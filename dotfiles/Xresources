@@ -1,0 +1,104 @@
+! do not scroll with output
+URxvt*scrollTtyOutput: false
+
+! scroll in relation to buffer (with mouse scroll or Shift+Page Up)
+URxvt*scrollWithBuffer: true
+
+! scroll back to the bottom on keypress
+URxvt*scrollTtyKeypress: true
+
+! ---perl extensions---
+! clipboard for enabling copy and paste
+! tabbed for multi-tabs
+! url-select for selecting url to open
+! fullscreen for shortcut to fullscreen. (needs 'urxvt-fullscree')
+! resize-font for resizing font size. (needs 'urxvt-resize-font-git')
+URxvt.perl-ext-common: default,clipboard,tabbedex,url-select,fullscreen,resize-font
+
+! disable the scrollback buffer for the secondary screen
+URxvt.secondaryScreen: 1
+URxvt.secondaryScroll: 0
+
+! enable copy and paste
+URxvt.clipboard.autocopy: true
+URxvt.keysym.M-c: perl:clipboard:copy
+URxvt.keysym.M-v: perl:clipboard:paste
+
+! url selection
+URxvt.keysym.M-u: perl:url-select:select_next
+URxvt.url-select.launcher: /usr/bin/xdg-open
+URxvt.url-select.underline: true
+
+! full screen shotcut. require 'urxvt-fullscreen'
+URxvt.keysym.F11: perl:fullscreen:switch
+
+! tabs setting
+URxvt.tabbed.new-button: false
+URxvt.tabbed.reopen-on-close: yes
+URxvt.tabbed.tabbar-fg: 2
+URxvt.tabbed.tabbar-bg: 0
+URxvt.tabbed.tab-fg: 3
+URxvt.tabbed.tab-bg: 0
+URxvt.tabbed.autohide: true
+URxvt.keysym.Control-t: perl:tabbedex:new_tab
+URxvt.keysym.M-a: perl:tabbedex:next_tab
+URxvt.keysym.M-d: perl:tabbedex:prev_tab
+URxvt.keysym.Control-Shift-Left: perl:tabbedex:move_tab_left
+URxvt.keysym.Control-Shift-Right: perl:tabbedex:move_tab_right
+URxvt.keysym.Control-R: perl:tabbedex:rename_tab
+
+! appearance
+URxvt.font:xft:DejaVu Sans Mono:pixelsize=15:antialias=False, \
+xft:wenquanyi bitmap song:pixelsize=15:antialias=False
+URxvt.cursorBlink: true
+URxvt.cursorUnderline: false
+URxvt.scrollBar: false
+URxvt.scrollBar_right: false
+URxvt.depth: 32
+
+! Common Keybinds for Navigations
+URxvt.keysym.Shift-Up: command:\033]720;1\007
+URxvt.keysym.Shift-Down: command:\033]721;1\007
+URxvt.keysym.Control-Up: \033[1;5A
+URxvt.keysym.Control-Down: \033[1;5B
+URxvt.keysym.Control-Right: \033[1;5C
+URxvt.keysym.Control-Left: \033[1;5D
+
+!! ---color scheme---
+
+! special
+*.foreground: #93a1a1
+*.background: [90]#141c21
+*.cursorColor: #afbfbf
+
+! black
+*.color0: #263640
+*.color8: #4a697d
+
+! red
+*.color1: #d12f2c
+*.color9: #fa3935
+
+! green
+*.color2: #819400
+*.color10: #a4bd00
+
+! yellow
+*.color3: #b08500
+*.color11: #d9a400
+
+! blue
+*.color4: #2587cc
+*.color12: #2ca2f5
+
+! magenta
+*.color5: #696ebf
+*.color13: #8086e8
+
+! cyan
+*.color6: #289c93
+*.color14: #33c5ba
+
+! white
+*.color7: #bfbaac
+*.color15: #fdf6e3
