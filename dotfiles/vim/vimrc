@@ -215,3 +215,4 @@ let g:syntastic_enable_highlighting=1
 
 let g:syntastic_sh_checkers = ['shellcheck']
 let g:syntastic_python_checkers = ['pylint', 'python']
+let g:syntastic_c_checkers= ['gcc', 'make']

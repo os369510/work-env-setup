@@ -41,8 +41,8 @@ URxvt.tabbed.tab-fg: 3
 URxvt.tabbed.tab-bg: 0
 URxvt.tabbed.autohide: true
 URxvt.keysym.Control-t: perl:tabbedex:new_tab
-URxvt.keysym.M-a: perl:tabbedex:next_tab
-URxvt.keysym.M-d: perl:tabbedex:prev_tab
+URxvt.keysym.M-d: perl:tabbedex:next_tab
+URxvt.keysym.M-a: perl:tabbedex:prev_tab
 URxvt.keysym.Control-Shift-Left: perl:tabbedex:move_tab_left
 URxvt.keysym.Control-Shift-Right: perl:tabbedex:move_tab_right
 URxvt.keysym.Control-R: perl:tabbedex:rename_tab
