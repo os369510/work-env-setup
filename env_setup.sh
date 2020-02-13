@@ -59,6 +59,7 @@ function get_same_container_num()
 }
 function setup_dotfiles()
 {
+    local REPO="$1"
     echo "# Step.$STEPS Setup dotfiles."
 
     # dotfiles
@@ -97,7 +98,7 @@ Xresources"
 WORK_DIR="Workspace"
 
 VOL_NAME="docker-work-area"
-REPO="$HOME/$WORK_DIR/WorkEnvSetup"
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 case $1 in
     docker)
@@ -124,13 +125,13 @@ case $1 in
         order=$(($order+1))
         DOCKER_NAME="${DOCKER_IMG//\//-}-$order"
 
-        setup_dotfiles
+        setup_dotfiles "$DIR"
 
         docker run -it --rm -w /root -v $VOL:/root --name $DOCKER_NAME $DOCKER_IMG
         ;;
     dotfiles)
         VOL="$HOME"
-        setup_dotfiles
+        setup_dotfiles "$DIR"
         source ~/.bashrc
         ;;
     *)
