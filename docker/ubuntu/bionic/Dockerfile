@@ -2,9 +2,12 @@ FROM ubuntu:bionic
 
 MAINTAINER os369510@gmail.com
 
+ENV User=ubuntu
 ENV Contact=os369510@gmail.com
 
 LABEL Owner=os369510
+
+USER root
 
 RUN \
   sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
@@ -17,6 +20,10 @@ RUN \
   rm -rf /var/lib/apt/lists/* \
   rm -rf /tmp/* && \
   rm -rf /var/tmp/*
+
+RUN useradd -ms /bin/bash ${User} && echo "${User}:${User}" | chpasswd && adduser ${User} sudo
+
+USER ${User}
 
 ENTRYPOINT ["apt", "update"]
 CMD ["bash"]
