@@ -25,5 +25,4 @@ RUN useradd -ms /bin/bash ${User} && echo "${User}:${User}" | chpasswd && adduse
 
 USER ${User}
 
-ENTRYPOINT ["apt", "update"]
 CMD ["bash"]

@@ -98,19 +98,20 @@ case $1 in
         eval VOL="$3"
         ORDER=0
         DOCKER_VOL=()
+        DOCKER_USER_NAME="ubuntu"
         DOCKER_WORK_DIR="/"
 
         if [ "$VOL" == "" ] || [ ! -d "$VOL" ]; then
             echo "Not found '$VOL' or '$VOL' is not a directory."
         else
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${VOL}:${HOME}/work-dir")
-            DOCKER_WORK_DIR="$HOME/work-dir"
+            DOCKER_VOL+=("${VOL}:/home/${DOCKER_USER_NAME}/work-dir")
+            DOCKER_WORK_DIR="/home/${DOCKER_USER_NAME}/work-dir"
         fi
 
         if [ -d "${HOME}/.gnupg" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.gnupg:${HOME}/.gnupg:ro")
+            DOCKER_VOL+=("${HOME}/.gnupg:/home/${DOCKER_USER_NAME}/.gnupg:ro")
         fi
 
         # XXX: consider to link/add dotfiles for docker env
