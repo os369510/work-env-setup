@@ -1,49 +1,38 @@
 #!/bin/bash
 function usage()
 {
-    echo "Usage: $0 (docker|dotfiles)[docker-image]"
+    echo "Usage: $0 (docker|dotfiles)[docker-image][dir-for-home-in-docker]"
     echo "  $0 dotfiles"
-    echo "  $0 docker [docker-image]"
+    echo "  $0 docker [docker-image] [dir-for-home-in-docker]"
     exit 1
 }
-function check_docker_installed()
+function check_docker_is_installed()
 {
-    local ret=$1
-    local ver=""
-    local installed='255'
-
     echo "# Step.$STEPS Check docker whether already installed?"
 
-    ver=`docker --version`
-    installed=`echo $?`
-    if [ "$installed" -eq '0' ]; then
-        echo "-- $ver"
+    if ! docker --version > /dev/null; then
+        echo "-- Docker needs to be installed."
+        exit 255
     else
-        echo "-- not found docker."
+        echo "-- Yes."
     fi
-    STEPS=$(($STEPS+1))
-
-    eval $ret="'$installed'"
+    STEPS=$((STEPS+1))
 }
 function check_docker_image_exist()
 {
-    local ret=$1
+    local img=$1
     local id=""
-    local existed='255'
 
-    echo "# Step.$STEPS Check docker image of arch whether existed?"
-    echo "-- Required docker image: $DOCKER_IMG"
+    echo "# Step.$STEPS Check docker image '$img' exists?"
 
-    id=`docker images -q $DOCKER_IMG| head -n 1`
+    id=$(docker images -q "$img"| head -n 1)
     if [ "$id" != "" ]; then
-        echo "--- Image ID - $id"
-        existed=0
+        echo "-- Found '$img' ($id)."
     else
-        echo "-- not found $DOCKER_IMG"
+        echo "-- Not found $img."
+        exit 255
     fi
-    STEPS=$(($STEPS+1))
-
-    eval $ret="'$existed'"
+    STEPS=$((STEPS+1))
 }
 function get_same_container_num()
 {
@@ -52,87 +41,95 @@ function get_same_container_num()
 
     echo "# Step.$STEPS Get the number of same container."
 
-    count=`docker ps -a| grep $2| wc -l`
-    STEPS=$(($STEPS+1))
+    count=$(docker ps -a| grep -c "$2")
+    echo "-- Found total ${count}'s container(s) named $2."
+    STEPS=$((STEPS+1))
 
-    eval $ret="'$count'"
+    eval "$ret='$count'"
 }
 function setup_dotfiles()
 {
     local REPO="$1"
+    local DOTDIR="dotfiles"
+    local SCRIPTS="scripts"
+    local SCRIPTDIR="$HOME/.local/bin/my_scripts"
+    local DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc \
+bash_profile Xresources"
     echo "# Step.$STEPS Setup dotfiles."
+
+    set -x
 
     # dotfiles
     for dotfile in $DOTFILES; do
-        if ! cmp --silent "$REPO/$DOTDIR/$dotfile" "$VOL/.$dotfile"; then
-            echo "Copy $REPO/$DOTDIR/$dotfile to $VOL/.$dotfile..."
-            cp "$REPO/$DOTDIR/$dotfile" "$VOL/.$dotfile"
-        fi
+        cp -u "$REPO/$DOTDIR/$dotfile" "$HOME/.$dotfile"
     done
 
     # vim
-    mkdir -p $VOL/.vim && cp -R $REPO/$DOTDIR/vim/* $VOL/.vim/
-    cp -u $REPO/$DOTDIR/vim/vimrc $VOL/.vimrc
+    mkdir -p "$HOME/.vim"
+    cp -R "$REPO"/"$DOTDIR"/vim/* "$HOME"/.vim/
+    cp -u "$REPO"/"$DOTDIR"/vim/vimrc "$HOME"/.vimrc
 
     # scripts
     mkdir -p "$SCRIPTDIR"
     if [ -d "$SCRIPTDIR" ]; then
-        for script in $(find "$REPO/$SCRIPTS" -name "*.sh"); do
-            if ! cmp --silent "$script" "$SCRIPTDIR/$(basename "$script")"; then
-                echo "Copy $script to $SCRIPTDIR/$(basename "$script")"
-                cp "$script" "$SCRIPTDIR/$(basename "$script")"
-            fi
-        done
+        find "$REPO/$SCRIPTS" -name "*.sh"\
+            -exec sh -c 'x="$1";y=$2; ln -s "$x" "$y/$(basename $x)"'\
+            _ {} "$SCRIPTDIR" \; > /dev/null 2>&1
     fi
 
-    STEPS=$(($STEPS+1))
+    set +x
+
+    STEPS=$((STEPS+1))
 }
 
 STEPS=1
 
-DOTDIR="dotfiles"
-SCRIPTS="scripts"
-SCRIPTDIR="$HOME/.local/bin/my_scripts"
-DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc bash_profile\
-Xresources"
-WORK_DIR="Workspace"
-
-VOL_NAME="docker-work-area"
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 case $1 in
     docker)
-        if [ "$2" == "" ]; then
+        if [ "$2" == "" ] || [ "$3" == "" ]; then
             usage
-            exit -1
+            exit 255
         fi
+
         DOCKER_BASE_NAME=${2#*/}
         DOCKER_IMG=$2
-        VOL="$HOME/$WORK_DIR/$VOL_NAME"
-        order=0
+        eval VOL="$3"
+        ORDER=0
+        DOCKER_VOL=()
+        DOCKER_WORK_DIR="/"
 
-        if [ ! -d $VOL ]; then
-            mkdir $VOL
+        if [ "$VOL" == "" ] || [ ! -d "$VOL" ]; then
+            echo "Not found '$VOL' or '$VOL' is not a directory."
+        else
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${VOL}:${HOME}/work-dir")
+            DOCKER_WORK_DIR="$HOME/work-dir"
         fi
 
-        check_docker_installed res
-        [ "$res" -ne 0 ] && exit -1
+        if [ -d "${HOME}/.gnupg" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/.gnupg:${HOME}/.gnupg:ro")
+        fi
 
-        check_docker_image_exist res
-        [ "$res" -ne 0 ] && exit -1
+        # XXX: consider to link/add dotfiles for docker env
 
-        get_same_container_num order $DOCKER_BASE_NAME
-        order=$(($order+1))
-        DOCKER_NAME="${DOCKER_IMG//\//-}-$order"
+        check_docker_is_installed
 
-        setup_dotfiles "$DIR"
+        check_docker_image_exist "$DOCKER_IMG"
 
-        docker run -it --rm -w /root -v $VOL:/root --name $DOCKER_NAME $DOCKER_IMG
+        get_same_container_num ORDER "$DOCKER_BASE_NAME"
+        ORDER=$((ORDER+1))
+        DOCKER_NAME="${DOCKER_IMG//\//-}-$ORDER"
+
+        docker run -it "${DOCKER_VOL[@]}" --privileged --name "$DOCKER_NAME"\
+            -w "$DOCKER_WORK_DIR" "$DOCKER_IMG"
         ;;
     dotfiles)
-        VOL="$HOME"
         setup_dotfiles "$DIR"
-        source ~/.bashrc
+        # shellcheck source=/dev/null
+        source "${HOME}/.bashrc"
         ;;
     *)
         usage
