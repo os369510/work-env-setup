@@ -1,20 +1,31 @@
 # README
-This repository include the config setting of Unix like system for myself  
-
-## Requirement
-curl
-
-## Pre-install
-mkdir -p ~/Workspace/WorkEnvSetup  
-mkdir -p ~/Workspace/docker-work-area  
+This repository maintains the configurations of Unix like system for myself.  
 
 ## Install
-cd ~/Workspace/WorkEnvSetup  
-git clone https://github.com/os369510/WorkEnvSetup.git  
+```
+git clone https://github.com/os369510/work-env-setup.git  
+```
 
 ## Usage
-cd ~/Workspace/WorkEnvSetup  
-bash env_set.sh (docker|dotfiles)  
+1. Apply dotfiles in current environment  
+```
+cd work-env-setup
+bash env_setup.sh dotfiles
+```
 
-## Other Packages
+2. Setup a ubuntu environment  
+
+- For bionic (18.04):  
+```
+docker pull os369510/ubuntu-bionic
+bash env_setup.sh docker os369510/ubuntu-bionic ${dir-to-bind-in-docker}
+```
+
+- For focal (20.04):  
+```
+docker pull os369510/ubuntu-focal
+bash env_setup.sh docker os369510/ubuntu-focal ${dir-to-bind-in-docker}
+```
+
+## Reference
 [vim-go](https://github.com/fatih/vim-go)  
