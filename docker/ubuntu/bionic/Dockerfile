@@ -17,6 +17,7 @@ RUN \
   apt-get install -y software-properties-common && \
   apt-get install -y byobu curl git htop man unzip vim wget && \
   apt-get install -y sudo devscripts debhelper dh-modaliases pbuilder && \
+  apt-get install -y systemd && \
   rm -rf /var/lib/apt/lists/* \
   rm -rf /tmp/* && \
   rm -rf /var/tmp/*
