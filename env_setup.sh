@@ -111,8 +111,19 @@ case $1 in
 
         if [ -d "${HOME}/.gnupg" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.gnupg:/home/${DOCKER_USER_NAME}/.gnupg:ro")
+            DOCKER_VOL+=("${HOME}/.gnupg:/home/${DOCKER_USER_NAME}/.gnupg")
         fi
+
+        if [ -f "${HOME}/.gitconfig" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/.gitconfig:/home/${DOCKER_USER_NAME}/.gitconfig:ro")
+        fi
+
+        if [ -f "${HOME}/.ssh" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/.ssh:/home/${DOCKER_USER_NAME}/.ssh:ro")
+        fi
+
 
         # XXX: consider to link/add dotfiles for docker env
 
@@ -124,8 +135,10 @@ case $1 in
         ORDER=$((ORDER+1))
         DOCKER_NAME="${DOCKER_IMG//\//-}-$ORDER"
 
+        set -x
         docker run -it "${DOCKER_VOL[@]}" --privileged --name "$DOCKER_NAME"\
             -w "$DOCKER_WORK_DIR" "$DOCKER_IMG"
+        set +x
         ;;
     dotfiles)
         setup_dotfiles "$DIR"
