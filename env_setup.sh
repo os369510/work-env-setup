@@ -103,27 +103,62 @@ case $1 in
 
         if [ "$VOL" == "" ] || [ ! -d "$VOL" ]; then
             echo "Not found '$VOL' or '$VOL' is not a directory."
+            exit 255
         else
             DOCKER_VOL+=("-v")
             DOCKER_VOL+=("${VOL}:/home/${DOCKER_USER_NAME}/work-dir")
             DOCKER_WORK_DIR="/home/${DOCKER_USER_NAME}/work-dir"
         fi
 
+        # GPG
         if [ -d "${HOME}/.gnupg" ]; then
             DOCKER_VOL+=("-v")
             DOCKER_VOL+=("${HOME}/.gnupg:/home/${DOCKER_USER_NAME}/.gnupg")
         fi
 
+        # Git
         if [ -f "${HOME}/.gitconfig" ]; then
             DOCKER_VOL+=("-v")
             DOCKER_VOL+=("${HOME}/.gitconfig:/home/${DOCKER_USER_NAME}/.gitconfig:ro")
         fi
 
-        if [ -f "${HOME}/.ssh" ]; then
+        if [ -f "${HOME}/.git-completion.sh" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/.git-completion.sh:/home/${DOCKER_USER_NAME}/.git-completion.sh:ro")
+        fi
+
+        if [ -f "${HOME}/.git-prompt.sh" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/.git-prompt.sh:/home/${DOCKER_USER_NAME}/.git-prompt.sh:ro")
+        fi
+
+        # SSH
+        if [ -d "${HOME}/.ssh" ]; then
             DOCKER_VOL+=("-v")
             DOCKER_VOL+=("${HOME}/.ssh:/home/${DOCKER_USER_NAME}/.ssh:ro")
         fi
 
+        # Vim
+        if [ -d "${HOME}/.vim" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/.vim:/home/${DOCKER_USER_NAME}/.vim:ro")
+        fi
+
+        if [ -f "${HOME}/.vimrc" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/.vimrc:/home/${DOCKER_USER_NAME}/.vimrc:ro")
+        fi
+
+        # Bash
+        if [ -f "${HOME}/.bashrc" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/.bashrc:/home/${DOCKER_USER_NAME}/.bashrc:ro")
+        fi
+
+        if [ -f "${HOME}/.bash_profile" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/.bash_profile:/home/${DOCKER_USER_NAME}/.bash_profile:ro")
+        fi
 
         # XXX: consider to link/add dotfiles for docker env
 
@@ -142,8 +177,6 @@ case $1 in
         ;;
     dotfiles)
         setup_dotfiles "$DIR"
-        # shellcheck source=/dev/null
-        source "${HOME}/.bashrc"
         ;;
     *)
         usage

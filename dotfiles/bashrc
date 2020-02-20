@@ -1,6 +1,12 @@
 set +h
 
-PS1='\u@\h$PNAME [\[\e[1;31m\]'
+VIRT=$(systemd-detect-virt)
+
+if [ "$VIRT" == "none" ]; then
+    PS1='\u@\h$PNAME [\[\e[1;31m\]'
+else
+    PS1='\u@$VIRT$PNAME [\[\e[1;31m\]'
+fi
 
 if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
@@ -20,7 +26,11 @@ if [ -d "$HOME/.local/bin/my_scripts" ]; then
     export PATH="$HOME/.local/bin/my_scripts:$PATH"
 fi
 
-PS1=$PS1'\[\e[0m\] \[\e[93m\]$PWD\[\e[0m\] ]\n$ '
+if [ "$VIRT" == "none" ]; then
+    PS1=$PS1'\[\e[0m\] \[\e[93m\]$PWD\[\e[0m\] ]\n$ '
+else
+    PS1=$PS1'\[\e[0m\] \[\e[92m\]$PWD\[\e[0m\] ]\n# '
+fi
 
 alias ll='ls -alh --color=auto --time-style="+[%Y/%m/%d %H:%M:%S]"'
 alias ls='ls --color=auto'
