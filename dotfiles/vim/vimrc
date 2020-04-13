@@ -28,7 +28,6 @@ call pathogen#helptags()
 set nocompatible
 set diffopt+=vertical
 set mouse=""
-syntax on
 
 " Relate file type
 filetype plugin on
@@ -111,6 +110,14 @@ highlight Pmenu ctermbg=239 ctermfg=247
 highlight PmenuSel ctermbg=239 ctermfg=123
 highlight PmenuSbar ctermbg=darkblue
 highlight PmenuThumb ctermfg=gray
+
+" Folding
+set foldenable
+set foldmethod=marker
+au FileType sh let g:sh_fold_enabled=5
+au FileType sh let g:is_bash=1
+au FileType sh set foldmethod=syntax
+syntax on
 
 " Custom key mapping
 

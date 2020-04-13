@@ -160,6 +160,12 @@ case $1 in
             DOCKER_VOL+=("${HOME}/.bash_profile:/home/${DOCKER_USER_NAME}/.bash_profile:ro")
         fi
 
+        # Systemd
+        if [ -d "/sys/fs/cgroup" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("/sys/fs/cgroup:/sys/fs/cgroup:ro")
+        fi
+
         # XXX: consider to link/add dotfiles for docker env
 
         check_docker_is_installed
