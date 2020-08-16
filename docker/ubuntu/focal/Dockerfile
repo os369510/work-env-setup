@@ -18,6 +18,7 @@ RUN \
   apt-get install -y byobu curl git htop man unzip vim wget && \
   apt-get install -y sudo devscripts debhelper dh-modaliases pbuilder && \
   apt-get install -y systemd tree python3-distro-info snapd && \
+  apt-get install -y ubuntu-dev-tools && \
   rm -rf /var/lib/apt/lists/* \
   rm -rf /tmp/* && \
   rm -rf /var/tmp/*
