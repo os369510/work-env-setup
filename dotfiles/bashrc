@@ -38,3 +38,8 @@ alias grep='grep --color=auto'
 alias conv-csv='enca -L zh_TW -x utf-8'
 
 export EDITOR=vim
+
+# Debian dev environments
+DEBEMAIL="jeremy.szu@canonical.com"
+DEBFULLNAME="Jeremy Szu"
+export DEBEMAIL DEBFULLNAME
