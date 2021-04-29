@@ -16,6 +16,7 @@ RUN \
   echo "tzdata tzdata/Zones/Asia select Taipei" >> /tmp/preseed.txt; \
   debconf-set-selections /tmp/preseed.txt && \
   sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
+  add-apt-repository -y ppa:oem-solutions-engineers/pc-enablement-tools && \
   apt-get update && \
   apt-get -y upgrade && \
   apt-get install -y apt-utils build-essential && \
@@ -23,8 +24,10 @@ RUN \
   apt-get install -y byobu curl git htop man unzip vim wget && \
   apt-get install -y sudo devscripts debhelper dh-modaliases pbuilder && \
   apt-get install -y systemd tree python3-distro-info snapd && \
+  apt-get install -y python3-pip python3-setuptools python3-wget && \
   apt-get install -y ubuntu-dev-tools && \
   apt-get install -y git-buildpackage && \
+  apt-get install -y bughamster oem-scripts && \
   rm -rf /var/lib/apt/lists/* \
   rm -rf /tmp/* && \
   rm -rf /var/tmp/*
