@@ -30,7 +30,7 @@ RUN \
 RUN \
   add-apt-repository -y ppa:oem-solutions-engineers/pc-enablement-tools && \
   apt-get update && \
-  apt-get install -y bughamster oem-scripts && \
+  apt-get install -y bughamsterc oem-scripts && \
   rm -rf /var/lib/apt/lists/* \
   rm -rf /tmp/* && \
   rm -rf /var/tmp/*
