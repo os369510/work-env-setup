@@ -20,7 +20,7 @@ RUN \
   apt-get -y upgrade && \
   apt-get install -y apt-utils build-essential && \
   apt-get install -y software-properties-common && \
-  apt-get install -y byobu curl git htop man unzip vim wget && \
+  apt-get install -y byobu curl git htop man unzip vim wget cscope && \
   apt-get install -y sudo devscripts debhelper dh-modaliases pbuilder && \
   apt-get install -y systemd tree python3-distro-info snapd && \
   apt-get install -y python3-pip python3-setuptools python3-wget && \
