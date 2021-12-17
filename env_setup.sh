@@ -166,6 +166,12 @@ case $1 in
             DOCKER_VOL+=("/sys/fs/cgroup:/sys/fs/cgroup:ro")
         fi
 
+        # Canonical oem-scripts
+        if [ -f "${HOME}/Workspace/ubuntu-qemu/oem-credential/config.ini" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/Workspace/ubuntu-qemu/oem-credential/config.ini:/home/${DOCKER_USER_NAME}/.config/oem-scripts/config.ini:ro")
+        fi
+
         # XXX: consider to link/add dotfiles for docker env
 
         check_docker_is_installed
@@ -177,7 +183,7 @@ case $1 in
         DOCKER_NAME="${DOCKER_IMG//\//-}-$ORDER"
 
         set -x
-        docker run -it "${DOCKER_VOL[@]}" --privileged --name "$DOCKER_NAME"\
+        docker run --rm -it "${DOCKER_VOL[@]}" --privileged --name "$DOCKER_NAME"\
             -w "$DOCKER_WORK_DIR" "$DOCKER_IMG"
         set +x
         ;;
