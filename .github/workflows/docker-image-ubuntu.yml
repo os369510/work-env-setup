@@ -2,9 +2,13 @@ name: Ubuntu Docker Image CI
 
 on:
   push:
-    branches: [ ubuntu-docker-build-ci-devel ]
+    branches: [ master ]
+    paths:
+      - 'docker/ubuntu/focal/Dockerfile'
   pull_request:
-    branches: [ ubuntu-docker-build-ci-devel ]
+    branches: [ master ]
+    paths:
+      - 'docker/ubuntu/focal/Dockerfile'
   workflow_dispatch:
 
 jobs:
@@ -33,4 +37,4 @@ jobs:
           context: .
           push: true
           file: docker/ubuntu/focal/Dockerfile
-          tags: os369510/ubuntu-focal:github-ci-test
+          tags: os369510/ubuntu-focal:latest
