@@ -33,4 +33,4 @@ jobs:
           context: .
           push: true
           file: docker/ubuntu/focal/Dockerfile
-          tags: os369510/ubuntu-focal:$(date +%s)
+          tags: os369510/ubuntu-focal:github-ci-test
