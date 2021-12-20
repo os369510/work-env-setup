@@ -1,0 +1,15 @@
+name: Ubuntu Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Ubuntu Focal Docker image
+      run: docker build . --file docker/ubuntu/focal/Dockerfile --tag ubuntu-focal:$(date +%s)
