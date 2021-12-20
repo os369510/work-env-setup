@@ -2,9 +2,9 @@ name: Ubuntu Docker Image CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ ubuntu-docker-build-ci-devel ]
   pull_request:
-    branches: [ master ]
+    branches: [ ubuntu-docker-build-ci-devel ]
   workflow_dispatch:
 
 jobs:
@@ -13,22 +13,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@master
+        uses: actions/checkout@ubuntu-docker-build-ci-devel
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@master
+        uses: docker/login-action@ubuntu-docker-build-ci-devel
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME}}
           password: ${{ secrets.DOCKERHUB_PASSWD}}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@
+        uses: docker/metadata-action@ubuntu-docker-build-ci-devel
         with:
           images: os369510/ubuntu-focal
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@master
+        uses: docker/build-push-action@ubuntu-docker-build-ci-devel
         with:
           context: .
           push: true
