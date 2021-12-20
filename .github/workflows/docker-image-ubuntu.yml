@@ -13,22 +13,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@ubuntu-docker-build-ci-devel
+        uses: actions/checkout@v2
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@ubuntu-docker-build-ci-devel
+        uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME}}
           password: ${{ secrets.DOCKERHUB_PASSWD}}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@ubuntu-docker-build-ci-devel
+        uses: docker/metadata-action@v3
         with:
           images: os369510/ubuntu-focal
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@ubuntu-docker-build-ci-devel
+        uses: docker/build-push-action@v2
         with:
           context: .
           push: true
