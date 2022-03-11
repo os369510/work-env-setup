@@ -5,10 +5,12 @@ on:
     branches: [ master ]
     paths:
       - 'docker/ubuntu/focal/Dockerfile'
+      - 'docker/ubuntu/jammy/Dockerfile'
   pull_request:
     branches: [ master ]
     paths:
       - 'docker/ubuntu/focal/Dockerfile'
+      - 'docker/ubuntu/jammy/Dockerfile'
   workflow_dispatch:
 
 jobs:
@@ -25,16 +27,30 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME}}
           password: ${{ secrets.DOCKERHUB_PASSWD}}
 
-      - name: Extract metadata (tags, labels) for Docker
+      - name: Extract focal metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v3
         with:
           images: os369510/ubuntu-focal
 
-      - name: Build and push Docker image
+      - name: Extract jammy metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: os369510/ubuntu-jammy
+
+      - name: Build and push Ubuntu focal Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
           file: docker/ubuntu/focal/Dockerfile
           tags: os369510/ubuntu-focal:latest
+
+      - name: Build and push Ubuntu Jammy Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          file: docker/ubuntu/jammy/Dockerfile
+          tags: os369510/ubuntu-jammy:latest
