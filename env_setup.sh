@@ -23,8 +23,9 @@ function check_docker_image_exist()
     local img=$1
     local id=""
 
-    echo "# Step.$STEPS Check docker image '$img' exists?"
+    echo "# Step.$STEPS Pull and check docker image '$img' exists?"
 
+    docker pull $img
     id=$(docker images -q "$img"| head -n 1)
     if [ "$id" != "" ]; then
         echo "-- Found '$img' ($id)."
