@@ -1,0 +1,41 @@
+name: Ubuntu Jammy Docker Image CI
+
+# How to trigger this workflow
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'docker/ubuntu/jammy/Dockerfile'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'docker/ubuntu/jammy/Dockerfile'
+  workflow_dispatch:
+
+jobs:
+  push_to_registry:
+    name: Build and push Ubuntu jammy Docker images to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME}}
+          password: ${{ secrets.DOCKERHUB_PASSWD}}
+
+      - name: Extract jammy metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: os369510/ubuntu-jammy
+
+      - name: Build and push Ubuntu jammy Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          file: docker/ubuntu/jammy/Dockerfile
+          tags: os369510/ubuntu-jammy:latest
