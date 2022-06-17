@@ -1,0 +1,9 @@
+#!/bin/sh
+# invoke shell if build fails.
+# Copy from https://wiki.ubuntu.com/PbuilderHowto
+# For pbuilder doc
+# https://pbuilder-docs.readthedocs.io/en/latest/faq.html#logging-in-to-pbuilder-to-investigate-build-failure
+
+apt-get install -y --force-yes vim less bash
+cd /tmp/buildd/*/debian/..
+/bin/bash < /dev/tty > /dev/tty 2> /dev/tty

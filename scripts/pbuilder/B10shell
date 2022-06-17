@@ -1,0 +1,29 @@
+#!/bin/bash
+# invoke shell if build fails.
+
+if [ -n "$PBSHELL" ]; then
+
+apt-get install -y --force-yes nano less bash
+cd /tmp/buildd/*/debian/..
+
+echo "pbuilder-$OS-$DIST-$ARCH" >/etc/debian_chroot
+
+cat <<.e
+
+----------------------------------------
+
+OS:   $OS
+DIST: $DIST
+ARCH: $ARCH
+
+pbuilder-cmd: $PBCURRENTCOMMANDLINEOPERATION
+
+========================================
+Entering DEBUG shell:
+
+.e
+/bin/bash < /dev/tty > /dev/tty 2> /dev/tty
+
+else
+  echo 'I: If you want a shell, set envvar PBSHELL=1' >&2
+fi
