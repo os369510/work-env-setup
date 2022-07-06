@@ -211,6 +211,7 @@ endif
 call plug#begin()
 " vim-go setting
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+Plug 'vim-scripts/taglist.vim'
 call plug#end()
 
 " Syntax Checker
@@ -223,3 +224,9 @@ let g:syntastic_enable_highlighting=1
 let g:syntastic_sh_checkers = ['shellcheck']
 let g:syntastic_python_checkers = ['pylint', 'python']
 let g:syntastic_c_checkers= ['gcc', 'make']
+
+" Taglist
+let Tlist_Compact_Format = 1
+let Tlist_GainFocus_On_ToggleOpen = 1
+let Tlist_Close_On_Select = 1
+nnoremap <C-l> :TlistToggle<CR>
