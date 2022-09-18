@@ -27,7 +27,7 @@ docker pull os369510/ubuntu-focal
 bash env_setup.sh docker os369510/ubuntu-focal ${dir-to-bind-in-docker}
 ```
 
-- For focal (22.04):  
+- For jammy (22.04):  
 ```
 docker pull os369510/ubuntu-jammy
 bash env_setup.sh docker os369510/ubuntu-jammy ${dir-to-bind-in-docker}
