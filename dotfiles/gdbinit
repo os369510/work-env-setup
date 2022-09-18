@@ -1,0 +1,4 @@
+# Need to check if it works in non-Ubuntu environment
+set debuginfod enabled on
+
+set print pretty on

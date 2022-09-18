@@ -43,3 +43,11 @@ export EDITOR=vim
 DEBEMAIL="jeremy.szu@canonical.com"
 DEBFULLNAME="Jeremy Szu"
 export DEBEMAIL DEBFULLNAME
+
+# if Debian or Ubuntu
+# if [ $lsb_release -is) = "Debian" ]...
+# if [ $lsb_release -is) = "Ubuntu" ]...
+# set remote debuginfod server for gdb.
+# https://ubuntu.com/server/docs/service-debuginfod
+# it's supported since 22.10
+export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com"
