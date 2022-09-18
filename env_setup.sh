@@ -173,6 +173,12 @@ case $1 in
             DOCKER_VOL+=("${HOME}/Workspace/ubuntu-qemu/oem-credential/config.ini:/home/${DOCKER_USER_NAME}/.config/oem-scripts/config.ini:ro")
         fi
 
+        # Canonical rclone
+        if [ -f "${HOME}/Workspace/ubuntu-qemu/oem-credential/rclone.conf" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/Workspace/ubuntu-qemu/oem-credential/rclone.conf:/home/${DOCKER_USER_NAME}/.config/rclone/rclone.conf:ro")
+        fi
+
         # XXX: consider to link/add dotfiles for docker env
 
         check_docker_is_installed
