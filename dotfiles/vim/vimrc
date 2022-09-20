@@ -213,7 +213,10 @@ nmap <SPACE> :nohlsearch<cr>
 call plug#begin()
 " vim-go setting
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+" taglist
 Plug 'vim-scripts/taglist.vim'
+" vim-translator
+Plug 'voldikss/vim-translator'
 call plug#end()
 
 " Syntax Checker
@@ -236,3 +239,7 @@ nnoremap <C-l> :TlistToggle<CR>
 
 " Linux kernel coding style
 let g:linuxsty_patterns = [ "/linux" ]
+
+" vim-translator
+let g:translator_target_lang = ['zh']
+let g:translator_default_engines = ['google']
