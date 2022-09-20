@@ -235,11 +235,13 @@ let Tlist_Compact_Format = 1
 let Tlist_GainFocus_On_ToggleOpen = 1
 let Tlist_Close_On_Select = 1
 let Tlist_WinWidth=60
+" ctrl + L
 nnoremap <C-l> :TlistToggle<CR>
 
 " Linux kernel coding style
 let g:linuxsty_patterns = [ "/linux" ]
 
 " vim-translator
-let g:translator_target_lang = ['zh']
 let g:translator_default_engines = ['google']
+" '\' + t
+nmap <silent> <Leader>t <Plug>TranslateW
