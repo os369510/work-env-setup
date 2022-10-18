@@ -24,7 +24,7 @@ RUN \
   apt-get install -y sudo devscripts debhelper dh-modaliases pbuilder && \
   apt-get install -y systemd tree python3-distro-info snapd && \
   apt-get install -y python3-pip python3-setuptools python3-wget && \
-  apt-get install -y sshpass ctags && \
+  apt-get install -y sshpass ctags rclone && \
   apt-get install -y ubuntu-dev-tools ca-certificates iputils-ping && \
   apt-get install -y git-buildpackage
 
