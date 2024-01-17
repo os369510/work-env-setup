@@ -62,13 +62,13 @@ bash_profile Xresources gdbinit zshrc zshenv"
 
     # dotfiles
     for dotfile in $DOTFILES; do
-        cp -u "$REPO/$DOTDIR/$dotfile" "$HOME/.$dotfile"
+        "$CP_CMD" "$REPO/$DOTDIR/$dotfile" "$HOME/.$dotfile"
     done
 
     # vim
     mkdir -p "$HOME/.vim"
-    cp -R "$REPO"/"$DOTDIR"/vim/* "$HOME"/.vim/
-    cp -u "$REPO"/"$DOTDIR"/vim/vimrc "$HOME"/.vimrc
+    "$CP_CMD" -R "$REPO"/"$DOTDIR"/vim/* "$HOME"/.vim/
+    "$CP_CMD" "$REPO"/"$DOTDIR"/vim/vimrc "$HOME"/.vimrc
 
     # scripts
     mkdir -p "$SCRIPTDIR"
@@ -86,6 +86,11 @@ bash_profile Xresources gdbinit zshrc zshenv"
 STEPS=1
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+CP_CMD="cp -u"
+
+if [[ $OSTYPE == 'darwin'* ]]; then
+    CP_CMD="cp"
+fi
 
 case $1 in
     docker)

@@ -101,5 +101,9 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vi="nvim"
 
-# xdg-desktop-portal-wlr
-systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+if [[ $OSTYPE == 'darwin'* ]]; then
+  export PATH=$PATH:/opt/homebrew/bin
+else
+  # xdg-desktop-portal-wlr
+  systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+fi
