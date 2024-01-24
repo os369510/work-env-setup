@@ -201,6 +201,19 @@ case $1 in
                     xargs docker login
                 # Workaround warning
                 rm "$HOME"/.docker/config.json
+
+                # CTI
+                DOCKER_EXTRA_ARGS+=("--privileged")
+                DOCKER_VOL+=("-v")
+                DOCKER_VOL+=("${HOME}/Workspace/cti:/workspace")
+                DOCKER_VOL+=("-v")
+                DOCKER_VOL+=("/dev:/dev")
+                DOCKER_VOL+=("-v")
+                DOCKER_VOL+=("/var/lock:/var/lock")
+                DOCKER_VOL+=("-v")
+                DOCKER_VOL+=("/proc:/proc")
+                DOCKER_VOL+=("-v")
+                DOCKER_VOL+=("/etc/group:/etc/group:ro")
             fi
         fi
 
@@ -213,7 +226,7 @@ case $1 in
         DOCKER_NAME="${DOCKER_IMG//[.:\/]/-}-$ORDER"
 
         set -x
-        docker run --rm -it "${DOCKER_VOL[@]}" --privileged --name "$DOCKER_NAME"\
+        docker run --rm -it "${DOCKER_EXTRA_ARGS[@]}" "${DOCKER_VOL[@]}" --privileged --name "$DOCKER_NAME"\
             -w "$DOCKER_WORK_DIR" "$DOCKER_IMG"
         set +x
         ;;
