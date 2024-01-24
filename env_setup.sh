@@ -106,6 +106,12 @@ case $1 in
         DOCKER_VOL=()
         DOCKER_USER_NAME="ubuntu"
         DOCKER_WORK_DIR="/"
+        ORG=""
+
+        # ORG Detection
+        if [[ "${DOCKER_IMG%%/*}" == *"nvidia"* ]]; then
+            ORG="nvidia"
+        fi
 
         if [ "$VOL" == "" ] || [ ! -d "$VOL" ]; then
             echo "Not found '$VOL' or '$VOL' is not a directory."
@@ -184,7 +190,19 @@ case $1 in
             DOCKER_VOL+=("${HOME}/Workspace/ubuntu-qemu/oem-credential/rclone.conf:/home/${DOCKER_USER_NAME}/.config/rclone/rclone.conf:ro")
         fi
 
-        # XXX: consider to link/add dotfiles for docker env
+        # If nvidia
+        if [ "$ORG" == "nvidia" ]; then
+            ENV_PATH="$HOME/.config/nv-cred/nv_gitlab_docker.env"
+            if [ -f "$ENV_PATH" ]; then
+                docker logout
+                cat "$ENV_PATH"|\
+                    awk -F'=' \
+                    '/URL/ {URL=$2} /USER/ {USER=$2} /TOKEN/ {TOKEN=$2} END {print URL " -u " USER " -p " TOKEN}'| \
+                    xargs docker login
+                # Workaround warning
+                rm "$HOME"/.docker/config.json
+            fi
+        fi
 
         check_docker_is_installed
 
@@ -192,7 +210,7 @@ case $1 in
 
         get_same_container_num ORDER "$DOCKER_BASE_NAME"
         ORDER=$((ORDER+1))
-        DOCKER_NAME="${DOCKER_IMG//\//-}-$ORDER"
+        DOCKER_NAME="${DOCKER_IMG//[.:\/]/-}-$ORDER"
 
         set -x
         docker run --rm -it "${DOCKER_VOL[@]}" --privileged --name "$DOCKER_NAME"\
