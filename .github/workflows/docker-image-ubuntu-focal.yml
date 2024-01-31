@@ -11,6 +11,8 @@ on:
     paths:
       - 'docker/ubuntu/focal/Dockerfile'
   workflow_dispatch:
+  schedule:
+    cron: '0 0 1 * *'
 
 jobs:
   push_to_registry:
