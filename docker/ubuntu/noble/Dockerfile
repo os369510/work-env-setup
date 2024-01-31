@@ -33,7 +33,7 @@ RUN \
   rm -rf /tmp/* && \
   rm -rf /var/tmp/*
 
-RUN useradd -ms /bin/bash ${User} && echo "${User}:${User}" | chpasswd && adduser ${User} sudo
+RUN echo "${User}:${User}" | chpasswd && adduser ${User} sudo
 
 USER ${User}
 
