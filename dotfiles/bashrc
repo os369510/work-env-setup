@@ -9,21 +9,20 @@ else
 fi
 
 if [ -f /etc/bash_completion ]; then
+    # shellcheck source=/dev/null
     . /etc/bash_completion
 fi
 
 if [ -f ~/.git-completion.sh ]; then
-    . ~/.git-completion.sh
+    # shellcheck source=/dev/null
+    source ~/.git-completion.sh
 fi
 
 if [ -f ~/.git-prompt.sh ]; then
-    . ~/.git-prompt.sh
+    # shellcheck source=/dev/null
+    source ~/.git-prompt.sh
     PS1=$PS1'$(__git_ps1 " %s")'
-    GIT_PS1_SHOWUPSTREAM="auto"
-fi
-
-if [ -d "$HOME/.local/bin/my_scripts" ]; then
-    export PATH="$HOME/.local/bin/my_scripts:$PATH"
+    export GIT_PS1_SHOWUPSTREAM="auto"
 fi
 
 if [ "$VIRT" == "none" ]; then
@@ -32,22 +31,12 @@ else
     PS1=$PS1'\[\e[0m\] \[\e[92m\]$PWD\[\e[0m\] ]\n# '
 fi
 
-alias ll='ls -alh --color=auto --time-style="+[%Y/%m/%d %H:%M:%S]"'
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-alias conv-csv='enca -L zh_TW -x utf-8'
-
-export EDITOR=vim
+if [ -f ~/.myprofile ]; then
+    # shellcheck source=/dev/null
+    source ~/.myprofile
+fi
 
 # Debian dev environments
 DEBEMAIL="jeremy.szu@canonical.com"
 DEBFULLNAME="Jeremy Szu"
 export DEBEMAIL DEBFULLNAME
-
-# if Debian or Ubuntu
-# if [ $lsb_release -is) = "Debian" ]...
-# if [ $lsb_release -is) = "Ubuntu" ]...
-# set remote debuginfod server for gdb.
-# https://ubuntu.com/server/docs/service-debuginfod
-# it's supported since 22.10
-export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com"

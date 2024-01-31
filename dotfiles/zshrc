@@ -74,6 +74,10 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+if [ -f ~/.myprofile ]; then
+    source ~/.myprofile
+fi
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -99,12 +103,3 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias vi="nvim"
-
-if [[ $OSTYPE == 'darwin'* ]]; then
-  export PATH=$PATH:/opt/homebrew/bin
-  export DOCKER_HOST="unix://$HOME/.colima/docker.sock"
-else
-  # xdg-desktop-portal-wlr
-  systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
-fi

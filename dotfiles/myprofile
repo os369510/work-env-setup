@@ -1,0 +1,41 @@
+alias ls='ls --color=auto'
+alias ll='ls -alh --color=auto --time-style="+[%Y/%m/%d %H:%M:%S]"'
+alias grep='grep --color=auto'
+alias conv-csv='enca -L zh_TW -x utf-8'
+alias vi="nvim"
+
+export EDITOR=vim
+
+if [ -d "$HOME/.local/bin/my_scripts" ]; then
+    export PATH="$HOME/.local/bin/my_scripts:$PATH"
+fi
+
+if [ -d "$HOME/Workspace/go" ]; then
+    export GOPATH=$HOME/Workspace/go
+fi
+
+if [[ $OSTYPE == 'darwin'* ]]; then
+    export PATH=$PATH:/opt/homebrew/bin
+    export DOCKER_HOST="unix://$HOME/.colima/docker.sock"
+elif [[ $OSTYPE == 'linux-gnu' ]]; then
+    # xdg-desktop-portal-wlr
+    systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+    DISTRO="$(grep -oP '^NAME="\K[^"]+' /etc/os-release)"
+    if [ "$DISTRO" = "Ubuntu" ]; then
+        # set remote debuginfod server for gdb.
+        # https://ubuntu.com/server/docs/service-debuginfod
+        # it's supported since 22.10
+        export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com"
+        if [[ -z $DISPLAY && $(tty) == /dev/tty1 && $XDG_SESSION_TYPE == tty ]]; then
+            MOZ_ENABLE_WAYLAND=1 QT_QPA_PLATFORM=wayland XDG_SESSION_TYPE=wayland exec dbus-run-session gnome-session
+        fi
+    elif [ "DISTRO" = "Arch Linux" ]; then
+        export GTK_IM_MODULE=fcitx5
+        export QT_IM_MODULE=fcitx5
+        export XMODIFIERS=@im=fcitx5
+        export QT_QPA_PLATFORM=wayland
+        export QT_QPA_PLATFORMTHEME=qt5ct
+
+        export MOZ_ENABLE_WAYLAND=1
+    fi
+fi
