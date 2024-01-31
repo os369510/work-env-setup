@@ -22,10 +22,16 @@ elif [[ $OSTYPE == 'linux-gnu' ]]; then
     systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
     DISTRO="$(grep -oP '^NAME="\K[^"]+' /etc/os-release)"
     if [ "$DISTRO" = "Ubuntu" ]; then
+        # Debian dev environments
+        DEBEMAIL="os369510@gmail.com"
+        DEBFULLNAME="Jeremy Szu"
+        export DEBEMAIL DEBFULLNAME
+
         # set remote debuginfod server for gdb.
         # https://ubuntu.com/server/docs/service-debuginfod
         # it's supported since 22.10
         export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com"
+
         if [[ -z $DISPLAY && $(tty) == /dev/tty1 && $XDG_SESSION_TYPE == tty ]]; then
             MOZ_ENABLE_WAYLAND=1 QT_QPA_PLATFORM=wayland XDG_SESSION_TYPE=wayland exec dbus-run-session gnome-session
         fi

@@ -35,8 +35,3 @@ if [ -f ~/.myprofile ]; then
     # shellcheck source=/dev/null
     source ~/.myprofile
 fi
-
-# Debian dev environments
-DEBEMAIL="jeremy.szu@canonical.com"
-DEBFULLNAME="Jeremy Szu"
-export DEBEMAIL DEBFULLNAME
