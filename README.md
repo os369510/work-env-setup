@@ -10,22 +10,10 @@ git clone https://github.com/os369510/work-env-setup.git
 ### Docker
 1. Setup a ubuntu environment  
 
-- For bionic (18.04):  
+- For focal/jammy/noble (20.04, 22.04 or 24.04):  
 ```
-docker pull os369510/ubuntu-bionic
-bash env_setup.sh docker os369510/ubuntu-bionic ${dir-to-bind-in-docker}
-```
-
-- For focal (20.04):  
-```
-docker pull os369510/ubuntu-focal
-bash env_setup.sh docker os369510/ubuntu-focal ${dir-to-bind-in-docker}
-```
-
-- For jammy (22.04):  
-```
-docker pull os369510/ubuntu-jammy
-bash env_setup.sh docker os369510/ubuntu-jammy ${dir-to-bind-in-docker}
+# replaced ubuntu-* by any series you want
+bash env_setup.sh docker os369510/ubuntu-noble ${dir-to-bind-in-docker}
 ```
 
 2. Step 1 will call setup dotfiles as well.  
