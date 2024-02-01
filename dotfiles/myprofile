@@ -21,11 +21,18 @@ elif [[ $OSTYPE == 'linux-gnu' ]]; then
     # xdg-desktop-portal-wlr
     systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
     DISTRO="$(grep -oP '^NAME="\K[^"]+' /etc/os-release)"
-    if [ "$DISTRO" = "Ubuntu" ]; then
-        # Debian dev environments
-        DEBEMAIL="os369510@gmail.com"
-        DEBFULLNAME="Jeremy Szu"
-        export DEBEMAIL DEBFULLNAME
+    if [[ "$DISTRO" == "Ubuntu" ]]; then
+        if [[ $(whoami) == "jeremysu" ]]; then
+            # Debian dev environments
+            DEBEMAIL="os369510@gmail.com"
+            DEBFULLNAME="Jeremy Szu"
+            export DEBEMAIL DEBFULLNAME
+        elif [[ $(whoami) == "jszu" ]]; then
+            # Debian dev environments
+            DEBEMAIL="jszu@nvidia.com"
+            DEBFULLNAME="Jeremy Szu"
+            export DEBEMAIL DEBFULLNAME
+        fi
 
         # set remote debuginfod server for gdb.
         # https://ubuntu.com/server/docs/service-debuginfod
@@ -35,7 +42,7 @@ elif [[ $OSTYPE == 'linux-gnu' ]]; then
         if [[ -z $DISPLAY && $(tty) == /dev/tty1 && $XDG_SESSION_TYPE == tty ]]; then
             MOZ_ENABLE_WAYLAND=1 QT_QPA_PLATFORM=wayland XDG_SESSION_TYPE=wayland exec dbus-run-session gnome-session
         fi
-    elif [ "DISTRO" = "Arch Linux" ]; then
+    elif [[ "$DISTRO" == "Arch Linux" ]]; then
         export GTK_IM_MODULE=fcitx5
         export QT_IM_MODULE=fcitx5
         export XMODIFIERS=@im=fcitx5
