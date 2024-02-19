@@ -99,6 +99,17 @@ case $1 in
             exit 255
         fi
 
+        # TODO: the /etc/passwd from MacOS doesn't compatable with linux
+        # containers (i.e. ubuntu/SUSE/Redhat here) today. If no /etc/passwd
+        # from host, the container will show "I have no name!" and dotfiles
+        # won't able to be applied, exclude MacOS util I found a way to fix it.
+        if [[ $OSTYPE == 'darwin'* ]]; then
+            echo "\
+This mode doesn't support MacOS anymore because the /etc/passwd from MacOS \
+doesn't compatable with linux containers today (i.e. ubuntu/SUSE/Redhat)."
+            exit 255
+        fi
+
         DOCKER_BASE_NAME=${2#*/}
         DOCKER_IMG=$2
         eval VOL="$3"
