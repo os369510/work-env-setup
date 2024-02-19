@@ -104,7 +104,7 @@ case $1 in
         eval VOL="$3"
         ORDER=0
         DOCKER_VOL=()
-        DOCKER_USER_NAME="ubuntu"
+        DOCKER_USER_NAME="$(whoami)"
         DOCKER_WORK_DIR="/"
         ORG=""
 
