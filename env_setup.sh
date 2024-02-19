@@ -178,6 +178,12 @@ case $1 in
             DOCKER_VOL+=("/sys/fs/cgroup:/sys/fs/cgroup:ro")
         fi
 
+        # To access the host users volumes
+        DOCKER_VOL+=("-v")
+        DOCKER_VOL+=("/etc/group:/etc/group:ro")
+        DOCKER_VOL+=("-v")
+        DOCKER_VOL+=("/etc/passwd:/etc/passwd:ro")
+
         # Canonical oem-scripts
         if [ -f "${HOME}/Workspace/ubuntu-qemu/oem-credential/config.ini" ]; then
             DOCKER_VOL+=("-v")
@@ -212,8 +218,6 @@ case $1 in
                 DOCKER_VOL+=("/var/lock:/var/lock")
                 DOCKER_VOL+=("-v")
                 DOCKER_VOL+=("/proc:/proc")
-                DOCKER_VOL+=("-v")
-                DOCKER_VOL+=("/etc/group:/etc/group:ro")
             fi
         fi
 
@@ -227,7 +231,7 @@ case $1 in
 
         set -x
         docker run --rm -it "${DOCKER_EXTRA_ARGS[@]}" "${DOCKER_VOL[@]}" --privileged --name "$DOCKER_NAME"\
-            -w "$DOCKER_WORK_DIR" "$DOCKER_IMG"
+            --user $(id -u):$(id -g) -w "$DOCKER_WORK_DIR" "$DOCKER_IMG"
         set +x
         ;;
     dotfiles)
