@@ -9,3 +9,5 @@
     insteadof = salsa:
 [url "git@salsa.debian.org:gnome-team/"]
     insteadof = salsa-gnome:
+[includeIf "gitdir:~/Workspace/company/"]
+    path = .gitconfig-company

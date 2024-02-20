@@ -65,6 +65,11 @@ bash_profile Xresources gdbinit myprofile zshrc"
         $CP_CMD "$REPO/$DOTDIR/$dotfile" "$HOME/.$dotfile"
     done
 
+    # company dotfiles
+    for dotfile in $DOTFILES; do
+        $CP_CMD "$REPO/$DOTDIR/company/$dotfile" "$HOME/.$dotfile-company"
+    done
+
     # vim
     mkdir -p "$HOME/.vim"
     $CP_CMD -R "$REPO"/"$DOTDIR"/vim/* "$HOME"/.vim/
