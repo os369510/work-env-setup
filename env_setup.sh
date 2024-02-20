@@ -257,10 +257,15 @@ case $1 in
 
         set -x
         export DOCKER_VOLS_FROM_HOST="${DOCKER_VOLS_FROM_HOST[@]}"
-        docker run --rm -it "${DOCKER_EXTRA_ARGS[@]}" "${DOCKER_VOL[@]}" --privileged --name "$DOCKER_NAME"\
-            "$DOCKER_IMG" bash -c "\
+        if [ "$ORG" == "nvidia" ]; then
+            docker run --rm -it "${DOCKER_EXTRA_ARGS[@]}" "${DOCKER_VOL[@]}" \
+                --name "$DOCKER_NAME" "$DOCKER_IMG"
+        else
+            docker run --rm -it "${DOCKER_EXTRA_ARGS[@]}" "${DOCKER_VOL[@]}" \
+                --name "$DOCKER_NAME" "$DOCKER_IMG" bash -c "\
 export DOCKER_VOLS_FROM_HOST='$DOCKER_VOLS_FROM_HOST'; \
 bash /work-env-setup/setup_in_container.sh $UID_VOL $(whoami) $DOCKER_USER_NAME"
+        fi
         set +x
         ;;
     dotfiles)
