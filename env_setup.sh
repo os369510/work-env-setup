@@ -112,11 +112,12 @@ doesn't compatable with linux containers today (i.e. ubuntu/SUSE/Redhat)."
 
         DOCKER_BASE_NAME=${2#*/}
         DOCKER_IMG=$2
-        eval VOL="$3"
+        VOL="$3"
+        UID_VOL=$(stat -c "%u" ${VOL})
         ORDER=0
         DOCKER_VOL=()
+        DOCKER_VOLS_FROM_HOST=()
         DOCKER_USER_NAME="$(whoami)"
-        DOCKER_WORK_DIR="/"
         ORG=""
 
         # ORG Detection
@@ -124,63 +125,85 @@ doesn't compatable with linux containers today (i.e. ubuntu/SUSE/Redhat)."
             ORG="nvidia"
         fi
 
+        # Container OS detection
+        if [[ $DOCKER_IMG == *"ubuntu"* ]]; then
+            DOCKER_USER_NAME="ubuntu"
+        elif [[ $DOCKER_IMG == *"redhat"* ]]; then
+            DOCKER_USER_NAME="redhat"
+        elif [[ $DOCKER_IMG == *"suse"* ]]; then
+            DOCKER_USER_NAME="suse"
+        fi
+
         if [ "$VOL" == "" ] || [ ! -d "$VOL" ]; then
             echo "Not found '$VOL' or '$VOL' is not a directory."
             exit 255
         else
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${VOL}:/home/${DOCKER_USER_NAME}/work-dir")
-            DOCKER_WORK_DIR="/home/${DOCKER_USER_NAME}/work-dir"
+            DOCKER_VOL+=("${VOL}:/work-dir")
+            DOCKER_VOLS_FROM_HOST+=("/work-dir")
         fi
+
+        # Pass this repository to container
+        DOCKER_VOL+=("-v")
+        DOCKER_VOL+=("${DIR}:/work-env-setup:ro")
 
         # GPG
         if [ -d "${HOME}/.gnupg" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.gnupg:/home/${DOCKER_USER_NAME}/.gnupg")
+            DOCKER_VOL+=("${HOME}/.gnupg:/.gnupg")
+            DOCKER_VOLS_FROM_HOST+=("/.gnupg")
         fi
 
         # Git
         if [ -f "${HOME}/.gitconfig" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.gitconfig:/home/${DOCKER_USER_NAME}/.gitconfig:ro")
+            DOCKER_VOL+=("${HOME}/.gitconfig:/.gitconfig:ro")
+            DOCKER_VOLS_FROM_HOST+=("/.gitconfig")
         fi
 
         if [ -f "${HOME}/.git-completion.sh" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.git-completion.sh:/home/${DOCKER_USER_NAME}/.git-completion.sh:ro")
+            DOCKER_VOL+=("${HOME}/.git-completion.sh:/.git-completion.sh:ro")
+            DOCKER_VOLS_FROM_HOST+=("/.git-completion.sh")
         fi
 
         if [ -f "${HOME}/.git-prompt.sh" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.git-prompt.sh:/home/${DOCKER_USER_NAME}/.git-prompt.sh:ro")
+            DOCKER_VOL+=("${HOME}/.git-prompt.sh:/.git-prompt.sh:ro")
+            DOCKER_VOLS_FROM_HOST+=("/.git-prompt.sh")
         fi
 
         # SSH
         if [ -d "${HOME}/.ssh" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.ssh:/home/${DOCKER_USER_NAME}/.ssh:ro")
+            DOCKER_VOL+=("${HOME}/.ssh:/.ssh:ro")
+            DOCKER_VOLS_FROM_HOST+=("/.ssh")
         fi
 
         # Vim
         if [ -d "${HOME}/.vim" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.vim:/home/${DOCKER_USER_NAME}/.vim:ro")
+            DOCKER_VOL+=("${HOME}/.vim:/.vim:ro")
+            DOCKER_VOLS_FROM_HOST+=("/.vim")
         fi
 
         if [ -f "${HOME}/.vimrc" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.vimrc:/home/${DOCKER_USER_NAME}/.vimrc:ro")
+            DOCKER_VOL+=("${HOME}/.vimrc:/.vimrc:ro")
+            DOCKER_VOLS_FROM_HOST+=("/.vimrc")
         fi
 
         # Bash
         if [ -f "${HOME}/.bashrc" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.bashrc:/home/${DOCKER_USER_NAME}/.bashrc:ro")
+            DOCKER_VOL+=("${HOME}/.bashrc:/.bashrc:ro")
+            DOCKER_VOLS_FROM_HOST+=("/.bashrc")
         fi
 
         if [ -f "${HOME}/.bash_profile" ]; then
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.bash_profile:/home/${DOCKER_USER_NAME}/.bash_profile:ro")
+            DOCKER_VOL+=("${HOME}/.bash_profile:/.bash_profile:ro")
+            DOCKER_VOLS_FROM_HOST+=("/.bash_profile")
         fi
 
         # Systemd
@@ -188,12 +211,6 @@ doesn't compatable with linux containers today (i.e. ubuntu/SUSE/Redhat)."
             DOCKER_VOL+=("-v")
             DOCKER_VOL+=("/sys/fs/cgroup:/sys/fs/cgroup:ro")
         fi
-
-        # To access the host users volumes
-        DOCKER_VOL+=("-v")
-        DOCKER_VOL+=("/etc/group:/etc/group:ro")
-        DOCKER_VOL+=("-v")
-        DOCKER_VOL+=("/etc/passwd:/etc/passwd:ro")
 
         # Canonical oem-scripts
         if [ -f "${HOME}/Workspace/ubuntu-qemu/oem-credential/config.ini" ]; then
@@ -220,7 +237,6 @@ doesn't compatable with linux containers today (i.e. ubuntu/SUSE/Redhat)."
                 rm "$HOME"/.docker/config.json
 
                 # CTI
-                DOCKER_EXTRA_ARGS+=("--privileged")
                 DOCKER_VOL+=("-v")
                 DOCKER_VOL+=("${HOME}/Workspace/cti:/workspace")
                 DOCKER_VOL+=("-v")
@@ -229,6 +245,7 @@ doesn't compatable with linux containers today (i.e. ubuntu/SUSE/Redhat)."
                 DOCKER_VOL+=("/var/lock:/var/lock")
                 DOCKER_VOL+=("-v")
                 DOCKER_VOL+=("/proc:/proc")
+                DOCKER_EXTRA_ARGS+=("--privileged")
             fi
         fi
 
@@ -241,8 +258,11 @@ doesn't compatable with linux containers today (i.e. ubuntu/SUSE/Redhat)."
         DOCKER_NAME="${DOCKER_IMG//[.:\/]/-}-$ORDER"
 
         set -x
+        export DOCKER_VOLS_FROM_HOST="${DOCKER_VOLS_FROM_HOST[@]}"
         docker run --rm -it "${DOCKER_EXTRA_ARGS[@]}" "${DOCKER_VOL[@]}" --privileged --name "$DOCKER_NAME"\
-            --user $(id -u):$(id -g) -w "$DOCKER_WORK_DIR" "$DOCKER_IMG"
+            "$DOCKER_IMG" bash -c "\
+export DOCKER_VOLS_FROM_HOST='$DOCKER_VOLS_FROM_HOST'; \
+bash /work-env-setup/setup_in_container.sh $UID_VOL $(whoami) $DOCKER_USER_NAME"
         set +x
         ;;
     dotfiles)
