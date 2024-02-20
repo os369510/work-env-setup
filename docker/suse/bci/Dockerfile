@@ -17,11 +17,12 @@ RUN zypper --non-interactive update && \
 
 # Create a user and add to sudo group
 RUN useradd -m -s /bin/bash ${User} && \
-    echo "${User}:${User}" | chpasswd
-#    usermod -aG wheelusers ${User}
+    echo "${User}:${User}" | chpasswd && \
+    groupadd wheel && \
+    usermod -aG wheel ${User}
 
 # Allow to execute any command without a password prompt
-RUN echo "${User} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${User}
+RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel
 
 USER ${User}
 
