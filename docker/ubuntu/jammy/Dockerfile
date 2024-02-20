@@ -37,6 +37,7 @@ RUN \
   rm -rf /var/tmp/*
 
 RUN useradd -ms /bin/bash ${User} && echo "${User}:${User}" | chpasswd && adduser ${User} sudo
+RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/sudo
 
 USER ${User}
 

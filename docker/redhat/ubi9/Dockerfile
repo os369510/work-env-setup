@@ -11,7 +11,7 @@ ENV Contact=os369510@gmail.com
 # Update the system and install necessary packages
 RUN yum update -y && \
     yum install -y \
-        git sshpass sudo iputils \
+        git sshpass sudo iputils vim \
         rpm-build make
 
 # Create a user and add to sudo group
