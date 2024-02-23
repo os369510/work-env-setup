@@ -104,21 +104,14 @@ case $1 in
             exit 255
         fi
 
-        # TODO: the /etc/passwd from MacOS doesn't compatable with linux
-        # containers (i.e. ubuntu/SUSE/Redhat here) today. If no /etc/passwd
-        # from host, the container will show "I have no name!" and dotfiles
-        # won't able to be applied, exclude MacOS util I found a way to fix it.
-        if [[ $OSTYPE == 'darwin'* ]]; then
-            echo "\
-This mode doesn't support MacOS anymore because the /etc/passwd from MacOS \
-doesn't compatable with linux containers today (i.e. ubuntu/SUSE/Redhat)."
-            exit 255
-        fi
-
         DOCKER_BASE_NAME=${2#*/}
         DOCKER_IMG=$2
         VOL="$3"
-        UID_VOL=$(stat -c "%u" ${VOL})
+        if [[ $OSTYPE == 'darwin'* ]]; then
+            UID_VOL=$(id -u $(ls -ld ${VOL}| awk '{print $3}'))
+        else
+            UID_VOL=$(stat -c "%u" ${VOL})
+        fi
         ORDER=0
         DOCKER_VOL=()
         DOCKER_VOLS_FROM_HOST=()
