@@ -29,6 +29,8 @@ case "$OS" in
                      -smp 8 -m 8196 \
                      -drive if=pflash,file="$BOOTLOADER",format=raw \
                      -drive id=hd0,media=disk,if=none,format=qcow2,file="$IMG_PATH/$DISK" \
+                     -device virtio-net-pci,netdev=net0 \
+                     -netdev user,id=net0,hostfwd=tcp::2222-:22 \
                      -device virtio-blk-pci,drive=hd0"
                 if [ -n "$install" ]; then
                     ARG="$ARG -boot menu=on \
@@ -47,6 +49,8 @@ case "$OS" in
                      -device qemu-xhci -device usb-kbd -device usb-tablet \
                      -device intel-hda \
                      -drive id=hd0,media=disk,if=none,format=qcow2,file="$IMG_PATH/$DISK" \
+                     -device virtio-net-pci,netdev=net0 \
+                     -netdev user,id=net0,hostfwd=tcp::2222-:22 \
                      -device virtio-blk-device,drive=hd0"
                 if [ -n "$install" ]; then
                     ARG="$ARG \
