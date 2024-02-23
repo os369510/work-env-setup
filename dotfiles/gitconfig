@@ -11,3 +11,5 @@
     insteadof = salsa-gnome:
 [includeIf "gitdir:~/Workspace/company/"]
     path = .gitconfig-company
+[includeIf "gitdir:~/work-dir/company/"]
+    path = .gitconfig-company
