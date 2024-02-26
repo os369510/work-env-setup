@@ -116,11 +116,15 @@ case $1 in
         DOCKER_VOL=()
         DOCKER_VOLS_FROM_HOST=()
         DOCKER_USER_NAME="$(whoami)"
-        ORG=""
+        USAGE=""
 
-        # ORG Detection
-        if [[ "${DOCKER_IMG%%/*}" == *"nvidia"* ]]; then
-            ORG="nvidia"
+        echo ${DOCKER_IMG}
+        echo ${DOCKER_IMG%%/*}
+        # USAGE Detection
+        if [[ "${DOCKER_IMG}" == *"cti"* ]]; then
+            USAGE="cti"
+        elif [[ "${DOCKER_IMG}" == *"gitlab-runner"* ]]; then
+            USAGE="gitlab-runner"
         fi
 
         # Container OS detection
@@ -222,8 +226,8 @@ case $1 in
             DOCKER_VOL+=("${HOME}/Workspace/ubuntu-qemu/oem-credential/rclone.conf:/home/${DOCKER_USER_NAME}/.config/rclone/rclone.conf:ro")
         fi
 
-        # If nvidia
-        if [ "$ORG" == "nvidia" ]; then
+        # If container is cti
+        if [ "$USAEG" == "cti" ]; then
             ENV_PATH="$HOME/.config/nv-cred/nv_gitlab_docker.env"
             if [ -f "$ENV_PATH" ]; then
                 docker logout
@@ -257,7 +261,7 @@ case $1 in
 
         set -x
         export DOCKER_VOLS_FROM_HOST="${DOCKER_VOLS_FROM_HOST[@]}"
-        if [ "$ORG" == "nvidia" ]; then
+        if [ "$USAGE" == "cti" ] || [ "$USAGE" == "gitlab-runner" ]; then
             docker run --rm -it "${DOCKER_EXTRA_ARGS[@]}" "${DOCKER_VOL[@]}" \
                 --name "$DOCKER_NAME" "$DOCKER_IMG"
         else
