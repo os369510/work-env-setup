@@ -118,13 +118,13 @@ case $1 in
         DOCKER_USER_NAME="$(whoami)"
         USAGE=""
 
-        echo ${DOCKER_IMG}
-        echo ${DOCKER_IMG%%/*}
         # USAGE Detection
         if [[ "${DOCKER_IMG}" == *"cti"* ]]; then
             USAGE="cti"
+            echo "Detected cti usage."
         elif [[ "${DOCKER_IMG}" == *"gitlab-runner"* ]]; then
             USAGE="gitlab-runner"
+            echo "Detected gitlab-runner usage."
         fi
 
         # Container OS detection
@@ -227,7 +227,7 @@ case $1 in
         fi
 
         # If container is cti
-        if [ "$USAEG" == "cti" ]; then
+        if [ "$USAGE" == "cti" ]; then
             ENV_PATH="$HOME/.config/nv-cred/nv_gitlab_docker.env"
             if [ -f "$ENV_PATH" ]; then
                 docker logout
@@ -248,6 +248,14 @@ case $1 in
                 DOCKER_VOL+=("-v")
                 DOCKER_VOL+=("/proc:/proc")
                 DOCKER_EXTRA_ARGS+=("--privileged")
+            fi
+        elif [ "$USAGE" == "gitlab-runner" ]; then
+            CONFIG_PATH="$HOME/.config/gitlab/config.toml"
+            if [ -f "$CONFIG_PATH" ]; then
+                DOCKER_VOL+=("-v")
+                DOCKER_VOL+=("${HOME}/.config/gitlab/config.toml:/etc/gitlab-runner/config.toml:ro")
+                DOCKER_VOL+=("-v")
+                DOCKER_VOL+=("/var/run/docker.sock:/var/run/docker.sock")
             fi
         fi
 
