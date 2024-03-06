@@ -55,7 +55,7 @@ function setup_dotfiles()
     local SCRIPTS="scripts"
     local SCRIPTDIR="$HOME/.local/bin/my_scripts"
     local DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc \
-bash_profile Xresources gdbinit myprofile zshrc"
+bash_profile Xresources gdbinit myprofile zshrc git-completion.zsh"
     echo "# Step.$STEPS Setup dotfiles."
 
     set -x

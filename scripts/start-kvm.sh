@@ -40,8 +40,16 @@ case "$OS" in
                 CMD="qemu-system-x86_64 $ARG"
                 ;;
             aarch64)
-                ISO="noble-live-server-arm64.iso"
-                DISK="ubuntu-dev-aarch64.qcow2"
+                if [ -f "$3" ]; then
+                    ISO="$3"
+                else
+                    ISO="noble-live-server-arm64.iso"
+                fi
+                if [ -f "$4" ]; then
+                    DISK="$4"
+                else
+                    DISK="ubuntu-dev-aarch64.qcow2"
+                fi
                 ARG="-accel hvf -cpu host -smp 8 -M virt -m 3000 \
                      -bios $IMG_PATH/QEMU_EFI.fd \
                      -monitor stdio \
@@ -49,8 +57,8 @@ case "$OS" in
                      -device qemu-xhci -device usb-kbd -device usb-tablet \
                      -device intel-hda \
                      -drive id=hd0,media=disk,if=none,format=qcow2,file="$IMG_PATH/$DISK" \
-                     -device virtio-net-pci,netdev=net0 \
-                     -netdev user,id=net0,hostfwd=tcp::2222-:22 \
+                     -device virtio-net-pci,netdev=vmnet \
+                     -netdev user,id=vmnet,hostfwd=tcp::2222-:22 \
                      -device virtio-blk-device,drive=hd0"
                 if [ -n "$install" ]; then
                     ARG="$ARG \
