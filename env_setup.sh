@@ -269,7 +269,10 @@ case $1 in
 
         set -x
         export DOCKER_VOLS_FROM_HOST="${DOCKER_VOLS_FROM_HOST[@]}"
-        if [ "$USAGE" == "cti" ] || [ "$USAGE" == "gitlab-runner" ]; then
+        if [ "$USAGE" == "gitlab-runner" ]; then
+            docker run --rm -d "${DOCKER_EXTRA_ARGS[@]}" "${DOCKER_VOL[@]}" \
+                --name "$DOCKER_NAME" "$DOCKER_IMG"
+        elif [ "$USAGE" == "cti" ]; then
             docker run --rm -it "${DOCKER_EXTRA_ARGS[@]}" "${DOCKER_VOL[@]}" \
                 --name "$DOCKER_NAME" "$DOCKER_IMG"
         else
