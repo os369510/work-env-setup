@@ -70,6 +70,9 @@ bash_profile Xresources gdbinit myprofile zshrc git-completion.zsh"
         $CP_CMD "$REPO/$DOTDIR/company/$dotfile" "$HOME/.$dotfile-company"
     done
 
+    # oh-my-zsh theme
+    $CP_CMD "$REPO/$DOTDIR/oh-my-zsh/themes/os369510.zsh-theme" "$HOME/.oh-my-zsh/themes/os369510.zsh-theme"
+
     # vim
     mkdir -p "$HOME/.vim"
     $CP_CMD -R "$REPO"/"$DOTDIR"/vim/* "$HOME"/.vim/
@@ -195,7 +198,7 @@ case $1 in
             DOCKER_VOLS_FROM_HOST+=("/.vimrc")
         fi
 
-        # Bash
+        # Bash, TODO: zsh support in container
         if [ -f "${HOME}/.bashrc" ]; then
             DOCKER_VOL+=("-v")
             DOCKER_VOL+=("${HOME}/.bashrc:/.bashrc:ro")
