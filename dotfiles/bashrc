@@ -1,11 +1,26 @@
 set +h
 
+get_instance() {
+    if [[ $OSTYPE == 'darwin'* ]]; then
+        OS="MacOS"
+    else
+        OS="$(grep "^PRETTY_NAME=" /etc/os-release| awk -F'"' '{print $2}')"
+        VIRT="$(systemd-detect-virt)"
+        if [ "$VIRT" != "none" ]; then
+            OS+=" on $VIRT"
+        fi
+    fi
+    echo "┌─\[\e[33m\][\[\e[91m\]$OS\[\e[33m\]] \[\e[36m\]$(whoami)\[\e[90m\]@\[\e[93m\]$(uname -n)"
+}
+
 VIRT=$(systemd-detect-virt)
 
+PS1="$(get_instance)"
+
 if [ "$VIRT" == "none" ]; then
-    PS1='\u@\h$PNAME [\[\e[1;31m\]'
+    PS1=$PS1' \[\e[0m\][\[\e[0m\] \[\e[93m\]$PWD\[\e[0m\] ]\n'
 else
-    PS1='\u@$VIRT$PNAME [\[\e[1;31m\]'
+    PS1=$PS1' \[\e[0m\][\[\e[0m\] \[\e[92m\]$PWD\[\e[0m\] ]\n'
 fi
 
 if [ -f /etc/bash_completion ]; then
@@ -21,14 +36,13 @@ fi
 if [ -f ~/.git-prompt.sh ]; then
     # shellcheck source=/dev/null
     source ~/.git-prompt.sh
-    PS1=$PS1'$(__git_ps1 " %s")'
+    PS1=$PS1'└─\[\e[32m\]$(__git_ps1 " %s")\[\e[0m\]'
+    if [ "$VIRT" == "none" ]; then
+        PS1=$PS1' $ '
+    else
+        PS1=$PS1' # '
+    fi
     export GIT_PS1_SHOWUPSTREAM="auto"
-fi
-
-if [ "$VIRT" == "none" ]; then
-    PS1=$PS1'\[\e[0m\] \[\e[93m\]$PWD\[\e[0m\] ]\n$ '
-else
-    PS1=$PS1'\[\e[0m\] \[\e[92m\]$PWD\[\e[0m\] ]\n# '
 fi
 
 if [ -f ~/.myprofile ]; then
