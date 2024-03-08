@@ -13,7 +13,8 @@ RUN zypper --non-interactive update && \
     zypper --non-interactive install \
         git \
         sudo \
-        iputils
+        iputils \
+        awk systemd
 
 # Create a user and add to sudo group
 RUN useradd -m -s /bin/bash ${User} && \
