@@ -1,0 +1,43 @@
+name: Ubuntu Bionic Docker Image CI
+
+# How to trigger this workflow
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'docker/ubuntu/bionic/Dockerfile'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'docker/ubuntu/bionic/Dockerfile'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *'
+
+jobs:
+  push_to_registry:
+    name: Build and push Ubuntu bionic Docker images to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME}}
+          password: ${{ secrets.DOCKERHUB_PASSWD}}
+
+      - name: Extract bionic metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: os369510/ubuntu-bionic
+
+      - name: Build and push Ubuntu bionic Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          file: docker/ubuntu/bionic/Dockerfile
+          tags: os369510/ubuntu-bionic:latest
