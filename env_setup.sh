@@ -64,7 +64,7 @@ function setup_dotfiles()
     # company dotfiles
     while IFS= read -r -d '' dotfile; do
         $CP_CMD "$dotfile" "$HOME/.$(basename "$dotfile")-company"
-    done < <(find "$REPO/$DOTDIR/company" -type f)
+    done < <(find "$REPO/$DOTDIR/company" -type f -print0)
 
     # oh-my-zsh theme
     $CP_CMD "$REPO/$DOTDIR/oh-my-zsh/themes/os369510.zsh-theme" "$HOME/.oh-my-zsh/themes/os369510.zsh-theme"
