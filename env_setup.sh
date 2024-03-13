@@ -1,8 +1,9 @@
 #!/bin/bash
 function usage()
 {
-    echo "Usage: $0 (docker|dotfiles)[docker-image][dir-for-home-in-docker]"
+    echo "Usage: $0 (docker|dotfiles|diff-dotfiles)[docker-image][dir-for-home-in-docker]"
     echo "  $0 dotfiles"
+    echo "  $0 diff-dotfiles"
     echo "  $0 docker [docker-image] [dir-for-home-in-docker]"
     exit 1
 }
@@ -25,7 +26,7 @@ function check_docker_image_exist()
 
     echo "# Step.$STEPS Pull and check docker image '$img' exists?"
 
-    docker pull $img
+    docker pull "$img"
     id=$(docker images -q "$img"| head -n 1)
     if [ "$id" != "" ]; then
         echo "-- Found '$img' ($id)."
@@ -51,11 +52,6 @@ function get_same_container_num()
 function setup_dotfiles()
 {
     local REPO="$1"
-    local DOTDIR="dotfiles"
-    local SCRIPTS="scripts"
-    local SCRIPTDIR="$HOME/.local/bin/my_scripts"
-    local DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc \
-bash_profile Xresources gdbinit myprofile zshrc git-completion.zsh"
     echo "# Step.$STEPS Setup dotfiles."
 
     set -x
@@ -66,9 +62,9 @@ bash_profile Xresources gdbinit myprofile zshrc git-completion.zsh"
     done
 
     # company dotfiles
-    for dotfile in $DOTFILES; do
-        $CP_CMD "$REPO/$DOTDIR/company/$dotfile" "$HOME/.$dotfile-company"
-    done
+    while IFS= read -r -d '' dotfile; do
+        $CP_CMD "$dotfile" "$HOME/.$(basename "$dotfile")-company"
+    done < <(find "$REPO/$DOTDIR/company" -type f)
 
     # oh-my-zsh theme
     $CP_CMD "$REPO/$DOTDIR/oh-my-zsh/themes/os369510.zsh-theme" "$HOME/.oh-my-zsh/themes/os369510.zsh-theme"
@@ -90,8 +86,41 @@ bash_profile Xresources gdbinit myprofile zshrc git-completion.zsh"
 
     STEPS=$((STEPS+1))
 }
+function diff_dotfiles()
+{
+    local REPO="$1"
+
+    # dotfiles
+    for dotfile in $DOTFILES; do
+        echo "- Comparing $dotfile -"
+        diff "$REPO/$DOTDIR/$dotfile" "$HOME/.$dotfile"
+    done
+
+    # company dotfiles
+    while IFS= read -r -d '' dotfile; do
+        echo "- Comparing $dotfile -"
+        diff "$dotfile" "$HOME/.$(basename "$dotfile")-company"
+    done < <(find "$REPO/$DOTDIR/company" -type f)
+
+    echo "- Comparing oh-my-zsh/themes/os369510.zsh-theme - "
+    $CP_CMD "$REPO/$DOTDIR/oh-my-zsh/themes/os369510.zsh-theme" "$HOME/.oh-my-zsh/themes/os369510.zsh-theme"
+
+    echo "- Comparing .vimrc (.vim/* are skipped) -"
+    $CP_CMD "$REPO"/"$DOTDIR"/vim/vimrc "$HOME"/.vimrc
+
+    while IFS= read -r -d '' script; do
+        echo "- Comparing $script-"
+        diff "$script" "$SCRIPTDIR/$(basename "$script")"
+    done < <(find "$REPO/$SCRIPTS" -type f -name "*.sh")
+}
 
 STEPS=1
+
+DOTDIR="dotfiles"
+SCRIPTS="scripts"
+SCRIPTDIR="$HOME/.local/bin/my_scripts"
+DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc \
+bash_profile Xresources gdbinit myprofile zshrc git-completion.zsh"
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 CP_CMD="cp -u"
@@ -288,6 +317,9 @@ bash /work-env-setup/setup_in_container.sh $UID_VOL $(whoami) $DOCKER_USER_NAME"
         ;;
     dotfiles)
         setup_dotfiles "$DIR"
+        ;;
+    diff-dotfiles)
+        diff_dotfiles "$DIR"
         ;;
     *)
         usage
