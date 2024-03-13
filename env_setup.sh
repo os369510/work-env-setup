@@ -188,24 +188,15 @@ case $1 in
             DOCKER_VOLS_FROM_HOST+=("/.gnupg")
         fi
 
-        # Git
-        if [ -f "${HOME}/.gitconfig" ]; then
+        # Dotfiles
+        for dotfile in $DOTFILES; do
+            if [ ! -f "${HOME}/.${dotfile}" ]; then
+                continue
+            fi
             DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.gitconfig:/.gitconfig:ro")
-            DOCKER_VOLS_FROM_HOST+=("/.gitconfig")
-        fi
-
-        if [ -f "${HOME}/.git-completion.sh" ]; then
-            DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.git-completion.sh:/.git-completion.sh:ro")
-            DOCKER_VOLS_FROM_HOST+=("/.git-completion.sh")
-        fi
-
-        if [ -f "${HOME}/.git-prompt.sh" ]; then
-            DOCKER_VOL+=("-v")
-            DOCKER_VOL+=("${HOME}/.git-prompt.sh:/.git-prompt.sh:ro")
-            DOCKER_VOLS_FROM_HOST+=("/.git-prompt.sh")
-        fi
+            DOCKER_VOL+=("${HOME}/.${dotfile}:/.${dotfile}:ro")
+            DOCKER_VOLS_FROM_HOST+=("/.${dotfile}")
+        done
 
         # SSH
         if [ -d "${HOME}/.ssh" ]; then
@@ -245,6 +236,14 @@ case $1 in
             DOCKER_VOL+=("-v")
             DOCKER_VOL+=("/sys/fs/cgroup:/sys/fs/cgroup:ro")
         fi
+
+        # Private company configurations
+        while IFS= read -r -d '' dotfile; do
+            bdotfile="$(basename "$dotfile")"
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${dotfile}:/${bdotfile}:ro")
+            DOCKER_VOLS_FROM_HOST+=("/${bdotfile}")
+        done < <(find "$HOME" -maxdepth 1 -name '.*-company' -type f -print0)
 
         # Canonical oem-scripts
         if [ -f "${HOME}/Workspace/ubuntu-qemu/oem-credential/config.ini" ]; then
