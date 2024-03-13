@@ -52,3 +52,7 @@ elif [[ $OSTYPE == 'linux-gnu' ]]; then
         export MOZ_ENABLE_WAYLAND=1
     fi
 fi
+
+if [ -f "$HOME/.profile-company" ]; then
+    source "$HOME/.profile-company"
+fi

@@ -9,7 +9,7 @@ git clone https://github.com/os369510/work-env-setup.git
 ## Usage
 ### Launch a `ubuntu`, `suse` or `redhat` docker environment  
 ```
-# To use Ubuntu LTS series {focal,jammy,noble}
+# To use Ubuntu LTS series {bionic,focal,jammy,noble}
 bash env_setup.sh docker os369510/ubuntu-noble ${dir-to-bind-in-docker}
 # To use Redhat releases {ubi9}
 bash env_setup.sh docker os369510/redhat-ubi9 ${dir-to-bind-in-docker}

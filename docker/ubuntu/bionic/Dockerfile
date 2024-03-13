@@ -25,6 +25,7 @@ RUN \
   apt-get install -y systemd tree python3-distro-info snapd && \
   apt-get install -y ubuntu-dev-tools && \
   apt-get install -y git-buildpackage && \
+  apt-get install -y lbzip2 libssl-dev python3-dev qemu-user-static swig zstd && \
   rm -rf /var/lib/apt/lists/* \
   rm -rf /tmp/* && \
   rm -rf /var/tmp/*
