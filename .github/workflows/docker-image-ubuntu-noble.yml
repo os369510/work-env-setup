@@ -41,3 +41,4 @@ jobs:
           push: true
           file: docker/ubuntu/noble/Dockerfile
           tags: os369510/ubuntu-noble:latest
+          platforms: linux/amd64,linux/arm64

@@ -41,3 +41,4 @@ jobs:
           push: true
           file: docker/suse/bci/Dockerfile
           tags: os369510/suse-bci:latest
+          platforms: linux/amd64,linux/arm64
