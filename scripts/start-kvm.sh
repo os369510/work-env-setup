@@ -18,7 +18,7 @@ case "$OS" in
         if [ "$2" == "install" ]; then
             install=yes
         fi
-        LIBVIRT_PATH="$HOME/.local/share/libvirt/"
+        LIBVIRT_PATH="$HOME/.local/share/libvirt"
         BOOTLOADER="/opt/homebrew/Cellar/qemu/8.2.0/share/qemu/edk2-x86_64-code.fd"
         IMG_PATH="$LIBVIRT_PATH/images"
         case "$1" in
@@ -57,8 +57,10 @@ case "$OS" in
                      -device qemu-xhci -device usb-kbd -device usb-tablet \
                      -device intel-hda \
                      -drive id=hd0,media=disk,if=none,format=qcow2,file="$IMG_PATH/$DISK" \
+                     -virtfs local,path="${HOME}"/Workspace/linux,mount_tag=host-ws,security_model=passthrough,id=host-ws \
                      -device virtio-net-pci,netdev=vmnet \
                      -netdev user,id=vmnet,hostfwd=tcp::2222-:22 \
+                     -nic vmnet-bridged,ifname=en8 \
                      -device virtio-blk-device,drive=hd0"
                 if [ -n "$install" ]; then
                     ARG="$ARG \
