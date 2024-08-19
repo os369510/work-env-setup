@@ -12,7 +12,7 @@ ENV Contact=os369510@gmail.com
 RUN yum update -y && \
     yum install -y \
         git sshpass sudo iputils vim \
-        rpm-build make
+        rpm-build make dracut
 
 # Create a user and add to sudo group
 RUN useradd -m -s /bin/bash ${User} && \

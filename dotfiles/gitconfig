@@ -1,5 +1,5 @@
 [user]
-	name = Jeremy Su
+	name = Jeremy Szu
 	email = os369510@gmail.com
 [alias]
     tree = log --graph --decorate --pretty=oneline --abbrev-commit
@@ -13,3 +13,7 @@
     path = .gitconfig-company
 [includeIf "gitdir:~/work-dir/company/"]
     path = .gitconfig-company
+[color]
+	ui = auto
+[pull]
+	rebase = true
