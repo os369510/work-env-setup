@@ -140,30 +140,26 @@ case "$OS" in
                 CMD="$CMD qemu-system-aarch64 $ARG"
                 ;;
             *)
-                usage
+                if [ -f "$4" ]; then
+                    DISK="$4"
+                else
+                    echo "$4 is not a file"
+                    exit 255
+                fi
+                ARG="-machine type=q35,accel=tcg \
+                     -smp 8 -m 8196 \
+                     -drive if=$BOOTLOADER/$1/QEMU_EFI.fd,format=raw \
+                     -serial stdio \
+                     -display default,show-cursor=on \
+                     -drive id=hd0,media=disk,if=none,format=qcow2,file="$IMG_PATH/$DISK" \
+                     -device virtio-net-pci,netdev=net0 \
+                     -netdev user,id=net0,hostfwd=tcp::2222-:22 \
+                     -device virtio-blk-pci,drive=hd0"
+                CMD="$CMD qemu-system-x86_64 $ARG"
                 ;;
         esac
         set -x
         eval "$CMD"
         set +x
-#        PATH_UBUNTU="$HOME/Qemu/Ubuntu"
-#        case $1 in
-#            ubuntu)
-#                qemu-system-x86_64\
-#                    -m 8G\
-#                    -vga std\
-#                    -mem-path /dev/hugepages\
-#                    -enable-kvm\
-#                    -machine q35,accel=kvm\
-#                    -device intel-iommu\
-#                    -device vfio-pci,host=01:00.0\
-#                    -cpu host\
-#                    -drive format=raw,file=$PATH_UBUNTU/ubuntu-1804-disk
-#                ;;
-#            *)
-#                echo "Usage: $0 [ubuntu] (options)"
-#                exit 1
-#                ;;
-#        esac
         ;;
 esac
