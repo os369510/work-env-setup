@@ -83,6 +83,13 @@ function setup_dotfiles()
         fi
     done
 
+    # ~/.claude/ (only copy if dir already exists)
+    if [ -d "$HOME/.claude" ]; then
+        $CP_CMD "$REPO/$DOTDIR/claude/settings.json" "$HOME/.claude/settings.json"
+    else
+        echo "-- Skipping claude: ~/.claude not found."
+    fi
+
     # scripts
     mkdir -p "$SCRIPTDIR"
     if [ -d "$SCRIPTDIR" ]; then
@@ -129,6 +136,14 @@ function diff_dotfiles()
             echo "-- Skipping $config_dir: ~/.config/$config_dir not found."
         fi
     done
+
+    # ~/.claude/
+    if [ -d "$HOME/.claude" ]; then
+        echo "- Comparing claude/settings.json -"
+        diff "$REPO/$DOTDIR/claude/settings.json" "$HOME/.claude/settings.json"
+    else
+        echo "-- Skipping claude: ~/.claude not found."
+    fi
 
     while IFS= read -r -d '' script; do
         echo "- Comparing $script-"
