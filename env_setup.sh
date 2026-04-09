@@ -74,6 +74,15 @@ function setup_dotfiles()
     $CP_CMD -R "$REPO"/"$DOTDIR"/vim/* "$HOME"/.vim/
     $CP_CMD "$REPO"/"$DOTDIR"/vim/vimrc "$HOME"/.vimrc
 
+    # ~/.config/ dirs (only copy if dir already exists)
+    for config_dir in $CONFIG_DIRS; do
+        if [ -d "$HOME/.config/$config_dir" ]; then
+            $CP_CMD -R "$REPO/$DOTDIR/config/$config_dir/"* "$HOME/.config/$config_dir/"
+        else
+            echo "-- Skipping $config_dir: ~/.config/$config_dir not found."
+        fi
+    done
+
     # scripts
     mkdir -p "$SCRIPTDIR"
     if [ -d "$SCRIPTDIR" ]; then
@@ -108,6 +117,19 @@ function diff_dotfiles()
     echo "- Comparing .vimrc (.vim/* are skipped) -"
     $CP_CMD "$REPO"/"$DOTDIR"/vim/vimrc "$HOME"/.vimrc
 
+    # ~/.config/ dirs
+    for config_dir in $CONFIG_DIRS; do
+        if [ -d "$HOME/.config/$config_dir" ]; then
+            while IFS= read -r -d '' f; do
+                rel="${f#$REPO/$DOTDIR/config/$config_dir/}"
+                echo "- Comparing $config_dir/$rel -"
+                diff "$f" "$HOME/.config/$config_dir/$rel"
+            done < <(find "$REPO/$DOTDIR/config/$config_dir" -type f -print0)
+        else
+            echo "-- Skipping $config_dir: ~/.config/$config_dir not found."
+        fi
+    done
+
     while IFS= read -r -d '' script; do
         echo "- Comparing $script-"
         diff "$script" "$SCRIPTDIR/$(basename "$script")"
@@ -121,6 +143,7 @@ SCRIPTS="scripts"
 SCRIPTDIR="$HOME/.local/bin/my_scripts"
 DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc \
 bash_profile Xresources gdbinit myprofile zshrc git-completion.zsh"
+CONFIG_DIRS="sway waybar mako"
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 CP_CMD="cp -u"

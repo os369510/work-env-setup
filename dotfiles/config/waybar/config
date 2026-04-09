@@ -1,0 +1,57 @@
+{
+	"layer": "top",
+    "position": "bottom",
+	"modules-left": ["sway/workspaces", "sway/mode"],
+	"modules-center": ["clock"],
+	"modules-right": ["network", "temperature", "cpu", "memory", "disk", "battery", "sway/language"],
+    "network": {
+        "format": "{ifname}",
+        "format-ethernet": " {ipaddr}/{cidr}",
+        "format-wifi": " {essid} ({signalStrength}%)",
+        "format-disconnected": "", //An empty format will hide the module.
+        "tooltip-format": " {ifname} via {gwaddr}",
+        "tooltip-format-ethernet": " {ifname}",
+        "tooltip-format-wifi": " {essid} ({signalStrength}%)",
+        "tooltip-format-disconnected": "Disconnected",
+        "max-length": 50
+    },
+	"temperature": {
+		"tooltip": false,
+		"format": "🌡 {}"
+	},
+	"cpu": {
+		"tooltip": false,
+		"format": "🖥 {}%"
+	},
+	"memory": {
+		"tooltip": false,
+		"format": "  {}%"
+	},
+    "disk": {
+        "interval": 30,
+        "format": "🖴 {percentage_free}% available on {path}",
+        "path": "/"
+    },
+    "clock": {
+        "today-format": "<span color='#ff6699'><b><u>{}</u></b></span>",
+        "calendar-weeks-pos": "right",
+        "format-calendar": "<span color='#ecc6d9'><b>{}</b></span>",
+        "format-calendar-weeks": "<span color='#99ffdd'><b>W{:%V}</b></span>",
+        "format-calendar-weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+    },
+    "battery": {
+        "format": "{icon} {capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "format-charging": " {capacity}%",
+        "interval": 30,
+        "states": {
+            "warning": 25,
+            "critical": 10
+        },
+        "tooltip": false
+    },
+    "sway/language": {
+        "format": "{short} {variant}",
+        "on-click": "swaymsg input type:keyboard xkb_switch_layout next",
+    },
+}

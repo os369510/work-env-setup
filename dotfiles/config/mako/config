@@ -1,0 +1,6 @@
+anchor=bottom-right
+border-radius=5
+default-timeout=10000
+height=500
+width=400
+layer=overlay
