@@ -158,7 +158,7 @@ SCRIPTS="scripts"
 SCRIPTDIR="$HOME/.local/bin/my_scripts"
 DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc \
 bash_profile Xresources gdbinit myprofile zshrc git-completion.zsh"
-CONFIG_DIRS="sway waybar mako"
+CONFIG_DIRS="sway waybar mako nvim"
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 CP_CMD="cp -u"
@@ -254,6 +254,13 @@ case $1 in
             DOCKER_VOL+=("-v")
             DOCKER_VOL+=("${HOME}/.vimrc:/.vimrc:ro")
             DOCKER_VOLS_FROM_HOST+=("/.vimrc")
+        fi
+
+        # Neovim
+        if [ -d "${HOME}/.config/nvim" ]; then
+            DOCKER_VOL+=("-v")
+            DOCKER_VOL+=("${HOME}/.config/nvim:/.config/nvim:ro")
+            DOCKER_VOLS_FROM_HOST+=("/.config/nvim")
         fi
 
         # Bash, TODO: zsh support in container
