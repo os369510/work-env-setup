@@ -1,5 +1,14 @@
 return {
   {
+    "nvim-treesitter/nvim-treesitter",
+    lazy = false,
+    config = function()
+      require("nvim-treesitter").setup()
+      require("configs.treesitter_compat")
+    end,
+  },
+
+  {
     "stevearc/conform.nvim",
     -- event = 'BufWritePre', -- uncomment for format on save
     opts = require "configs.conform",
