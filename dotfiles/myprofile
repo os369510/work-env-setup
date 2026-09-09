@@ -6,6 +6,10 @@ alias vi="nvim"
 
 export EDITOR=vim
 
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
 if [ -d "$HOME/.local/bin/my_scripts" ]; then
     export PATH="$HOME/.local/bin/my_scripts:$PATH"
 fi
