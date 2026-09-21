@@ -24,25 +24,24 @@ require("lazy").setup({
 
   { import = "plugins" },
 
-  -- Diagram.nvim for in-editor Mermaid preview
-  {
-    "3rd/diagram.nvim",
-    dependencies = { "3rd/image.nvim" },
-    opts = {
-      renderer_options = {
-        mermaid = {
-          theme = "forest", -- Options: "default", "dark", "forest", "neutral"
-        },
-      },
-    },
-  },
-
   -- Markdown-preview.nvim for browser-based preview
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
     build = function() vim.fn["mkdp#util#install"]() end,
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+      vim.g.mkdp_theme = "dark"
+    end,
+    keys = {
+      {
+        "<leader>mp",
+        "<Plug>MarkdownPreviewToggle",
+        ft = "markdown",
+        desc = "Toggle Markdown/Mermaid preview",
+      },
+    },
   }
 }, lazy_config)
 

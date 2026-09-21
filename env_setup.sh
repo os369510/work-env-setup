@@ -74,7 +74,10 @@ function setup_dotfiles()
     $CP_CMD -R "$REPO"/"$DOTDIR"/vim/* "$HOME"/.vim/
     $CP_CMD "$REPO"/"$DOTDIR"/vim/vimrc "$HOME"/.vimrc
 
-    # ~/.config/ dirs (only copy if dir already exists)
+    # ~/.config/ dirs (optional desktop configs are copied only when present)
+    # Neovim is managed by this repository, so bootstrap its config directory
+    # on a fresh machine instead of silently skipping it.
+    mkdir -p "$HOME/.config/nvim"
     for config_dir in $CONFIG_DIRS; do
         if [ -d "$HOME/.config/$config_dir" ]; then
             $CP_CMD -R "$REPO/$DOTDIR/config/$config_dir/"* "$HOME/.config/$config_dir/"

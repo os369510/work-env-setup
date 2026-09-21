@@ -24,5 +24,12 @@ cd work-env-setup
 bash env_setup.sh dotfiles
 ```
 
+### Preview Mermaid diagrams in Neovim
+
+Open a Markdown file containing a fenced `mermaid` code block and press
+`<Leader>mp` (Space, then `m`, then `p`). The preview opens in your browser and
+updates while you edit. The first Neovim launch installs the required plugin;
+Node.js is not required because the plugin uses its prebuilt application.
+
 ## Reference
 [vim-go](https://github.com/fatih/vim-go)  
