@@ -19,11 +19,11 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term terminology
+set $term kitty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu j4-dmenu-desktop --dmenu='bemenu -i -p "@menu>" --nb "#3f3f3f" --nf "#dcdccc" --fn "pango:DejaVu Sans Mono 12"' --term='termite' | xargs swaymsg exec
+set $menu j4-dmenu-desktop --dmenu='bemenu -i -p "@menu>" --nb "#3f3f3f" --nf "#dcdccc" --fn "pango:DejaVu Sans Mono 12"' --term=kitty --term-mode=kitty | xargs swaymsg exec
 
 ### Output configuration
 #

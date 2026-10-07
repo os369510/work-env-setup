@@ -5,8 +5,18 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
--- Clear search highlight (matches vimrc <SPACE> mapping)
-map("n", "<Space>", ":nohlsearch<CR>", { silent = true, desc = "Clear search highlight" })
+-- Keep Space free as the leader-key prefix.
+map("n", "<Esc>", "<cmd>nohlsearch<CR>", { silent = true, desc = "Clear search highlight" })
+
+-- Browser preview for Markdown, including fenced Mermaid diagrams.
+map("n", "<leader>mp", "<cmd>MarkdownPreview<CR>", {
+  silent = true,
+  desc = "Open Markdown/Mermaid preview",
+})
+map("n", "<leader>mx", "<cmd>MarkdownPreviewStop<CR>", {
+  silent = true,
+  desc = "Stop Markdown/Mermaid preview",
+})
 
 -- Tagbar toggle (replaces taglist <C-l>)
 map("n", "<C-l>", ":TagbarToggle<CR>", { silent = true, desc = "Toggle tagbar" })

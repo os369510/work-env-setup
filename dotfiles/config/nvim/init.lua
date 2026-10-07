@@ -26,22 +26,18 @@ require("lazy").setup({
 
   -- Markdown-preview.nvim for browser-based preview
   {
-    "iamcco/markdown-preview.nvim",
+    -- Upstream bundles Mermaid 10.2.3, which cannot render block-beta.
+    -- This pinned fork commit changes only mermaid.min.js to Mermaid 11.10.1.
+    "Gowa2017/markdown-preview.nvim",
+    commit = "55e552ab9274886bbbce91a3b0c880bf83b9c8c2",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
-    build = function() vim.fn["mkdp#util#install"]() end,
+    build = "cd app && ./install.sh",
     init = function()
       vim.g.mkdp_filetypes = { "markdown" }
-      vim.g.mkdp_theme = "dark"
+      vim.g.mkdp_theme = "light"
+      vim.g.mkdp_echo_preview_url = 1
     end,
-    keys = {
-      {
-        "<leader>mp",
-        "<Plug>MarkdownPreviewToggle",
-        ft = "markdown",
-        desc = "Toggle Markdown/Mermaid preview",
-      },
-    },
   }
 }, lazy_config)
 

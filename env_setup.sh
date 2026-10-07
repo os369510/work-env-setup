@@ -78,6 +78,12 @@ function setup_dotfiles()
     # Neovim is managed by this repository, so bootstrap its config directory
     # on a fresh machine instead of silently skipping it.
     mkdir -p "$HOME/.config/nvim"
+    # Bootstrap terminal configs when their applications are installed.
+    for config_dir in kitty herdr; do
+        if command -v "$config_dir" > /dev/null 2>&1; then
+            mkdir -p "$HOME/.config/$config_dir"
+        fi
+    done
     for config_dir in $CONFIG_DIRS; do
         if [ -d "$HOME/.config/$config_dir" ]; then
             $CP_CMD -R "$REPO/$DOTDIR/config/$config_dir/"* "$HOME/.config/$config_dir/"
@@ -119,13 +125,13 @@ function diff_dotfiles()
     while IFS= read -r -d '' dotfile; do
         echo "- Comparing $dotfile -"
         diff "$dotfile" "$HOME/.$(basename "$dotfile")-company"
-    done < <(find "$REPO/$DOTDIR/company" -type f)
+    done < <(find "$REPO/$DOTDIR/company" -type f -print0)
 
     echo "- Comparing oh-my-zsh/themes/os369510.zsh-theme - "
-    $CP_CMD "$REPO/$DOTDIR/oh-my-zsh/themes/os369510.zsh-theme" "$HOME/.oh-my-zsh/themes/os369510.zsh-theme"
+    diff "$REPO/$DOTDIR/oh-my-zsh/themes/os369510.zsh-theme" "$HOME/.oh-my-zsh/themes/os369510.zsh-theme"
 
     echo "- Comparing .vimrc (.vim/* are skipped) -"
-    $CP_CMD "$REPO"/"$DOTDIR"/vim/vimrc "$HOME"/.vimrc
+    diff "$REPO"/"$DOTDIR"/vim/vimrc "$HOME"/.vimrc
 
     # ~/.config/ dirs
     for config_dir in $CONFIG_DIRS; do
@@ -151,7 +157,7 @@ function diff_dotfiles()
     while IFS= read -r -d '' script; do
         echo "- Comparing $script-"
         diff "$script" "$SCRIPTDIR/$(basename "$script")"
-    done < <(find "$REPO/$SCRIPTS" -type f -name "*.sh")
+    done < <(find "$REPO/$SCRIPTS" -type f -name "*.sh" -print0)
 }
 
 STEPS=1
@@ -161,7 +167,7 @@ SCRIPTS="scripts"
 SCRIPTDIR="$HOME/.local/bin/my_scripts"
 DOTFILES="git-completion.sh git-prompt.sh gitconfig bashrc \
 bash_profile Xresources gdbinit myprofile zshrc git-completion.zsh"
-CONFIG_DIRS="sway waybar mako nvim"
+CONFIG_DIRS="sway waybar mako nvim kitty herdr"
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 CP_CMD="cp -u"

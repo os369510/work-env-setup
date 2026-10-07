@@ -1,0 +1,11 @@
+onboarding = false
+
+[ui]
+agent_panel_sort = "spaces"
+
+[keys]
+prefix = "ctrl+q"
+
+[theme]
+name = "gruvbox"
+auto_switch = false
